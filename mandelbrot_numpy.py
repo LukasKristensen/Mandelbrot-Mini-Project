@@ -38,6 +38,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    # Computation time: 19.82s
+    # Computation time: 19.98s
 
