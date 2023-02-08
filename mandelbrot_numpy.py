@@ -23,7 +23,7 @@ def mandelbrot(x, y):
     return 255
 
 
-if __name__ == '__main__':
+def main():
     start_time = time.time()
     solution = [[(0, 0, 0) for x in range(pRE)] for y in range(pIM)]
 
@@ -34,6 +34,10 @@ if __name__ == '__main__':
     print("Computation time:", time.time() - start_time)
     plt.imshow(solution)
     plt.show()
+
+
+if __name__ == '__main__':
+    main()
 
     # Computation time: 19.82s
 

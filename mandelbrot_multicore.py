@@ -1,4 +1,4 @@
-import numba
+import multiprocessing
 from matplotlib import pyplot as plt
 import time
 
@@ -11,7 +11,6 @@ def color_it(t):
     return int(255 * (t / 200)), int(255 * (t / 60)), int(255 * (t / 20))
 
 
-@numba.vectorize
 def mandelbrot(x, y):
     c = complex(x, y)
     z = 0
@@ -29,7 +28,7 @@ def main():
 
     for x in range(pRE):
         for y in range(pIM):
-            solution[y][x] = color_it(mandelbrot((x-(pRE*0.75))/(pRE*0.35), (y-(pRE*0.5))/(pRE*0.35)))
+            solution[y][x] = color_it(mandelbrot((x - (pRE * 0.75)) / (pRE * 0.35), (y - (pRE * 0.5)) / (pRE * 0.35)))
 
     print("Computation time:", time.time() - start_time)
     plt.imshow(solution)
@@ -37,6 +36,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    # Computation time: 2.75s
+    multiprocessing.Process(target=main).start()
+    # Computation time: 4.32s
 
