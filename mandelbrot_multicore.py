@@ -11,6 +11,9 @@ def color_it(t):
     return int(255 * (t / 200)), int(255 * (t / 60)), int(255 * (t / 20))
 
 
+solution = [[(0, 0, 0) for x in range(pRE)] for y in range(pIM)]
+
+
 def mandelbrot(x, y):
     c = complex(x, y)
     z = 0
@@ -22,20 +25,29 @@ def mandelbrot(x, y):
     return 255
 
 
-def main():
-    start_time = time.time()
-    solution = [[(0, 0, 0) for x in range(pRE)] for y in range(pIM)]
+start_time, solution = 0, 0
 
-    for x in range(pRE):
-        for y in range(pIM):
-            solution[y][x] = color_it(mandelbrot((x - (pRE * 0.75)) / (pRE * 0.35), (y - (pRE * 0.5)) / (pRE * 0.35)))
 
-    print("Computation time:", time.time() - start_time)
-    plt.imshow(solution)
-    plt.show()
+def main(x):
+    global start_time
+    global solution
+
+    for y in range(pIM):
+        try:
+            solution[x][y] = mandelbrot((x - (pRE * 0.75)) / (pRE * 0.35), (y - (pRE * 0.5)) / (pRE * 0.35))
+        except TypeError:
+            print(x, y)
 
 
 if __name__ == '__main__':
-    multiprocessing.Process(target=main).start()
+    start_time = time.time()
+
+    print("Count:", multiprocessing.cpu_count())
+    mp_pool = multiprocessing.Pool(processes=2)
+    mp_pool.map(main, range(pRE), chunksize=1)
+
     # Computation time: 4.46s
+    print("Computation time:", time.time() - start_time)
+    plt.imshow(solution)
+    plt.show()
 
