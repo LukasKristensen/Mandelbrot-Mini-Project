@@ -23,11 +23,7 @@ def mandelbrot(x, y):
     return 255
 
 
-start_time, solution = 0, 0
-
-
 def test(y):
-    global solution
     solution = [[(0, 0, 0) for m in range(pRE)] for n in range(pIM)]
 
     for x in range(pRE):
