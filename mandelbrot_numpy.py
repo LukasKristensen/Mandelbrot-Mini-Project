@@ -7,10 +7,6 @@ pIM = 1000
 threshold = 2
 
 
-def color_it(t):
-    return int(255 * (t / 200)), int(255 * (t / 60)), int(255 * (t / 20))
-
-
 def mandelbrot(c):
     """
     Generate a Mandelbrot set using vectorized numpy operations.
@@ -23,46 +19,43 @@ def mandelbrot(c):
     # Generate a 2D array of zeros, which is then converted to a complex data type array
     z = numpy.zeros_like(c, dtype=complex)
 
-    div_time = numpy.zeros(c.shape, dtype=int)
+    divergence_time = numpy.zeros(c.shape, dtype=int)
 
     # Iterate over the complex plane
-    for i in range(1000):
+    for i in range(100):
         # Apply the Mandelbrot formula
         z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
 
         # Check each element of the array for divergence
         diverged = mandelbrot_mask & (numpy.abs(z) > threshold)
         # Update the divergence time
-        div_time[diverged] = i
+        divergence_time[diverged] = i
 
         # Check if the absolute value of z is greater than the threshold
         mandelbrot_mask[numpy.abs(z) > threshold] = False
 
-    return mandelbrot_mask, div_time
+    return divergence_time
 
 
 def main():
     start_time = time.time()
 
-    # Generates linear spaces with 300 and 200 elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-2.5, 1.5, 300)
-    y_space = numpy.linspace(-1.5, 1.5, 200)
+    # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
+    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
 
-    # Generate a 2D array for each dimension
-    complete_space = x_space[:, numpy.newaxis] + y_space[numpy.newaxis, :] * 1j
+    # Generate a 2D array for each dimension of the complex plane
+    complete_space = x_space + y_space * 1j
+
     # Apply the Mandelbrot formula
-    complete_space, div_time = mandelbrot(complete_space)
-
-    print("Complete space:", complete_space)
-    print("Div time:", div_time)
+    computed_mandelbrot = mandelbrot(complete_space)
 
     print("Computation time:", time.time() - start_time)
-    plt.imshow(div_time, cmap='magma')
-    # plt.imshow(div_time)
+    plt.imshow(computed_mandelbrot, cmap='magma')
     plt.show()
 
 
 if __name__ == '__main__':
     main()
-    # Computation time: 0.42s
+    # Computation time: 2.04s
 

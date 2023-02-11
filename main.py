@@ -1,6 +1,6 @@
 # todo: Mini-project Part 1
 #       [x] (a) Implement using naive approach
-#       [ ] (b) Implement using numpy vectorized
+#       [x] (b) Implement using numpy vectorized
 #       [x] (c) Implement using numba
 #       [ ] (d) Implement using multiprocessing
 

@@ -6,10 +6,6 @@ pIM = 1000
 threshold = 2
 
 
-def color_it(t):
-    return int(255 * (t / 200)), int(255 * (t / 60)), int(255 * (t / 20))
-
-
 def mandelbrot(x, y):
     c = complex(x, y)
     z = 0
@@ -18,7 +14,7 @@ def mandelbrot(x, y):
         if abs(z) > threshold:
             return i
         z = z*z + c
-    return 255
+    return 0
 
 
 def main():
@@ -27,14 +23,14 @@ def main():
 
     for x in range(pRE):
         for y in range(pIM):
-            solution[y][x] = color_it(mandelbrot((x-(pRE*0.75))/(pRE*0.35), (y-(pRE*0.5))/(pRE*0.35)))
+            solution[y][x] = mandelbrot((x-(pRE*0.75))/(pRE*0.35), (y-(pRE*0.5))/(pRE*0.35))
 
     print("Computation time:", time.time() - start_time)
-    plt.imshow(solution)
+    plt.imshow(solution, cmap='magma')
     plt.show()
 
 
 if __name__ == '__main__':
     main()
-    # Computation time: 4.62s
+    # Computation time: 3.83s
 
