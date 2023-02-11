@@ -18,6 +18,7 @@ def mandelbrot(c):
     mandelbrot_mask = numpy.ones_like(c, dtype=bool)
     # Generate a 2D array of zeros, which is then converted to a complex data type array
     z = numpy.zeros_like(c, dtype=complex)
+    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
 
     divergence_time = numpy.zeros(c.shape, dtype=int)
 
