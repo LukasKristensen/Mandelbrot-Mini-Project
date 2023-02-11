@@ -37,7 +37,7 @@ def mandelbrot(c):
     return divergence_time
 
 
-def main():
+def main(show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
@@ -51,11 +51,13 @@ def main():
     computed_mandelbrot = mandelbrot(complete_space)
 
     print("Computation time:", time.time() - start_time)
-    plt.imshow(computed_mandelbrot, cmap='magma')
-    plt.show()
+
+    if show_figure:
+        plt.imshow(computed_mandelbrot, cmap='magma')
+        plt.show()
 
 
 if __name__ == '__main__':
     main()
-    # Computation time: 2.04s
+    # Computation time: 2.12s
 

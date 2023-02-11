@@ -19,7 +19,7 @@ def mandelbrot(x, y):
     return 0
 
 
-def main():
+def main(show_figure=True):
     start_time = time.time()
     solution = [[(0, 0, 0) for x in range(pRE)] for y in range(pIM)]
 
@@ -28,11 +28,13 @@ def main():
             solution[y][x] = mandelbrot((x-(pRE*0.75))/(pRE*0.35), (y-(pRE*0.5))/(pRE*0.35))
 
     print("Computation time:", time.time() - start_time)
-    plt.imshow(solution, cmap='magma')
-    plt.show()
+
+    if show_figure:
+        plt.imshow(solution, cmap='magma')
+        plt.show()
 
 
 if __name__ == '__main__':
     main()
-    # Computation time: 1.45s
+    # Computation time: 1.39s
 
