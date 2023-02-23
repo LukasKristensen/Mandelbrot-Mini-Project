@@ -1,64 +1,104 @@
-import multiprocessing
 from matplotlib import pyplot as plt
 import time
+import numpy
+import multiprocessing
 
-pRE = 10
-pIM = 10
+pRE = 1000
+pIM = 1000
 threshold = 2
+iterations = 100
 
 
-def mandelbrot(x, y):
-    c = complex(x, y)
-    z = 0
+def mandelbrot(c):
+    """
+    Generate a Mandelbrot set using vectorized numpy operations.
 
-    for i in range(100):
-        if abs(z) > threshold:
-            return float(i)
-        z = z*z + c
-    return 0
+    :param c:
+    :return mandelbrot:
+    """
+    # Generate a 2D array of ones, which is then converted to a boolean data type array
+    mandelbrot_mask = numpy.ones_like(c, dtype=bool)
+    # Generate a 2D array of zeros, which is then converted to a complex data type array
+    z = numpy.zeros_like(c, dtype=complex)
+    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
+
+    divergence_time = numpy.zeros(c.shape, dtype=int)
+
+    # Iterate over the complex plane
+    for i in range(iterations):
+        # Apply the Mandelbrot formula
+        z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
+
+        # Check each element of the array for divergence
+        diverged = mandelbrot_mask & (numpy.abs(z) > threshold)
+        # Update the divergence time
+        divergence_time[diverged] = i
+
+        # Check if the absolute value of z is greater than the threshold
+        mandelbrot_mask[numpy.abs(z) > threshold] = False
+
+    return divergence_time
 
 
-def test(y):
-    solution = [[0 for m in range(pRE)] for n in range(pIM)]
+def main(chunk_size, cores, show_figure=True):
+    start_time = time.time()
 
-    for x in range(pRE):
-        print("Old val:",x,y,solution[x][y])
-        solution[x][y] = mandelbrot((x - (pRE * 0.75)) / (pRE * 0.35), (y - (pRE * 0.5)) / (pRE * 0.35))
-        print("New val:",x,y,solution[x][y])
+    # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
+    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
 
-    return solution
+    # Generate a 2D array for each dimension of the complex plane
+    complete_space = x_space + y_space * 1j
 
+    pool_workers = multiprocessing.Pool(processes=cores)
+    solution_return = pool_workers.map(mandelbrot, complete_space, chunksize=chunk_size)
+    reshaped_solution = numpy.array(solution_return).reshape(pIM, pRE)
 
-def main(show_figure=True):
-    global start_time
-
-    mp_pool = multiprocessing.Pool(processes=4)
-    received_solution = mp_pool.map_async(test, range(pIM), chunksize=1)
-    mp_pool.close()
-    mp_pool.join()
-
-    collected_array = []
-    print("Solution:", received_solution)
-    for value in received_solution.get():
-        collected_array.append(value[0])
-
-    print("Collected array:", collected_array)
-    for i in collected_array:
-        print(i)
-    print("Computation time:", time.time() - start_time)
+    print("Computation time:", round(time.time() - start_time, 5), "Cores:", cores, "Chunk Size:", chunk_size)
 
     if show_figure:
-        plt.imshow(collected_array)
+        plt.imshow(reshaped_solution, cmap='magma')
         plt.show()
 
 
 if __name__ == '__main__':
-    start_time = time.time()
+    print("Cores available:", multiprocessing.cpu_count())
 
-    main()
+    for core in range(1, multiprocessing.cpu_count() + 1):
+        for chunk_size in range(1, 500, 30):
+            main(chunk_size=chunk_size, cores=core, show_figure=False)
 
-    # Computation time: 4.46s
-    print("Computation time:", time.time() - start_time)
+    # Without multiprocessing
+    # Computation time: 2.12s
 
+    # 1 Processor
+    # Computation time: 2.7245500087738037
 
+    # 2 Processors
+    # Computation time: 1.861546277999878s
+
+    # 4 Processors
+    # Computation time: 1.6297404766082764s
+
+    # 8 Processors
+    # Computation time: 1.5058352947235107s
+
+    # -----------------------------
+    # 8 Processors with Chunk Size 1
+    # 1.6212193965911865s
+
+    # 8 Processors with Chunk Size 5
+    # Computation time: 1.5571467876434326s
+
+    # 8 Processors with Chunk Size 10
+    # Computation time: 1.6028096675872803s
+
+    # 8 Processors with Chunk Size 100
+    # Computation time: 1.5139856338500977s
+
+    # 8 Processors with Chunk Size 200
+    # Computation time: 1.7952868938446045s
+
+    # 8 Processors with Chunk Size 500
+    # Computation time: 2.2340340614318848s
 
