@@ -8,6 +8,8 @@ pIM = 1000
 threshold = 2
 iterations = 100
 
+performance_metrics = []
+
 
 def mandelbrot(c):
     """
@@ -55,6 +57,7 @@ def main(chunk_size, cores, show_figure=True):
     reshaped_solution = numpy.array(solution_return).reshape(pIM, pRE)
 
     print("Computation time:", round(time.time() - start_time, 5), "Cores:", cores, "Chunk Size:", chunk_size)
+    performance_metrics.append((cores, chunk_size, time.time() - start_time))
 
     if show_figure:
         plt.imshow(reshaped_solution, cmap='magma')
@@ -63,10 +66,20 @@ def main(chunk_size, cores, show_figure=True):
 
 if __name__ == '__main__':
     print("Cores available:", multiprocessing.cpu_count())
+    # main(chunk_size=1, cores=multiprocessing.cpu_count(), show_figure=True)
 
     for core in range(1, multiprocessing.cpu_count() + 1):
-        for chunk_size in range(1, 500, 30):
+        for chunk_size in range(1, 200, 10):
             main(chunk_size=chunk_size, cores=core, show_figure=False)
+
+    ax = plt.figure().add_subplot(projection='3d')
+    ax.plot_trisurf([x[0] for x in performance_metrics], [x[1] for x in performance_metrics], [x[2] for x in performance_metrics], edgecolor='none', cmap='viridis', antialiased=False)
+
+    ax.set_xlabel('Cores')
+    ax.set_ylabel('Chunk Size')
+    ax.set_zlabel('Computation Time')
+
+    plt.show()
 
     # Without multiprocessing
     # Computation time: 2.12s
