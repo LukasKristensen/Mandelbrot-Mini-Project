@@ -7,6 +7,12 @@ threshold = 2
 
 
 def mandelbrot(x, y):
+    """
+    Compute the Mandelbrot set using a naive approach
+    :param x:
+    :param y:
+    :return:
+    """
     c = complex(x, y)
     z = 0
 

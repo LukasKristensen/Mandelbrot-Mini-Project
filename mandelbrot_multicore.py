@@ -65,8 +65,9 @@ def main(chunk_size, cores, show_figure=True):
 
 
 if __name__ == '__main__':
-    print("Cores available:", multiprocessing.cpu_count())
-    # main(chunk_size=1, cores=multiprocessing.cpu_count(), show_figure=True)
+    """
+    Run this file to generate a 3D plot of the computation time in relation to the number of cores and chunk size.
+    """
 
     for core in range(1, multiprocessing.cpu_count() + 1):
         for chunk_size in range(1, 200, 10):
