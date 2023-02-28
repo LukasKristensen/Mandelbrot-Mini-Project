@@ -44,7 +44,6 @@ def main(show_figure=True, save_image=False):
 
 
 if __name__ == '__main__':
-    print("Saving as:",f'mandelbrot_numba_{str(datetime.datetime.now()).replace(":","-")}.pdf')
     main(save_image=True)
     # Computation time: 1.39s
 
