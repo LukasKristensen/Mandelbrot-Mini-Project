@@ -11,8 +11,7 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 - Iterations: 100
 </br>
 
-**Mini-Project Part 1 Content**</br>
-[``Hand-In``](Part%201%20-%20Algorithms%20with%20performance%20analysis)
+**Mini-Project Part 1** ([``Hand-In``](Part%201%20-%20Algorithms%20with%20performance%20analysis))</br>
 - Naive
 - Vectorized
 - Numba-optimized
