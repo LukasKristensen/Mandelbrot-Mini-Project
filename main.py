@@ -14,7 +14,8 @@ import multiprocessing
         Iterations = 100
 """
 
-if __name__ == '__main__':
+
+def mini_project_part_1():
     print(f'\n {"#"*15} Mini-project Part 1 {"#"*15}')
     print(f'\n {"-"*10} (a) Implemented using naive approach {"-"*10}')
     mandelbrot_naive.main(show_figure=False)
@@ -27,6 +28,13 @@ if __name__ == '__main__':
     mandelbrot_multicore.main(show_figure=False, cores=multiprocessing.cpu_count(), chunk_size=81)
 
 
+def mini_project_part_2():
+    print(f'\n {"#"*15} Mini-project Part 2 {"#"*15}')
+
+
+if __name__ == '__main__':
+    mini_project_part_2()
+
 # todo: Mini-project Part 1
 #       [x] (a) Implement using naive approach
 #       [x] (b) Implement using numpy vectorized
@@ -34,6 +42,12 @@ if __name__ == '__main__':
 #       [x] (d) Implement using multiprocessing
 
 # todo: Mini-project Part 2
+#       [ ] (a) Implement with different data-types
+#       [ ] (b) Implement with Dask Array datatype
+#       [ ] (c) Execution with local using Dask
+#       [ ] (d) Execution with distributed using Dask
+#       [ ] (e) Above implementations with different chunk sizes
+#       [ ] (f) Implement optimization/improvement e.g. stopping when divergence occurs
 
 # todo: Mini-project Part 3
 
