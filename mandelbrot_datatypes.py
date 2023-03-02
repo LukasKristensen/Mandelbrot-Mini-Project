@@ -4,9 +4,10 @@ from matplotlib import pyplot as plt
 import time
 import numba
 
-pRE = 1000
-pIM = 1000
-threshold = 2
+pRE = 10000
+pIM = 10000
+iterations = 100
+threshold = 100
 
 
 def mandelbrot(data_type):
@@ -25,7 +26,7 @@ def mandelbrot(data_type):
     divergence_time = numpy.zeros(complete_space.shape, dtype=data_type)
 
     # Iterate over the complex plane
-    for i in range(100):
+    for i in range(iterations):
         # Apply the Mandelbrot formula
         z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + complete_space[mandelbrot_mask]
 
@@ -36,7 +37,8 @@ def mandelbrot(data_type):
 
         # Check if the absolute value of z is greater than the threshold
         mandelbrot_mask[numpy.abs(z) > threshold] = False
-    print("Data-type:",data_type,"Computation time:", time.time() - start_time)
+    end_time = time.time()
+    print("Data-type:", data_type, "Computation time:", round(end_time - start_time,5),"s")
     return divergence_time
 
 
@@ -51,6 +53,10 @@ def main(show_figure=False):
 
 
 if __name__ == '__main__':
+    main()
+    print("")
+    main()
+    print("")
     main()
     # Computation time: 1.39s
 
