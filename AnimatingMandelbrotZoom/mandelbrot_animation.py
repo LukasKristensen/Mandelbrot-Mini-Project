@@ -59,8 +59,10 @@ def main(x_0, y_0, x_1, y_1):
 
 
 if __name__ == '__main__':
-
-    interest_points = [[-2.25, 0.75, -1.25, 1.25],
+    # Coordinates to interpolate between
+    # First four coordinates are the start and end points of the interpolation
+    # The fifth coordinate is the number of steps to take between the start and end points
+    interest_points = [[-2.25, 0.75, -1.25, 1.25, 30],
                        [-0.352917, -0.127973, -0.722195, -0.534797, 30],
                        [-0.206791, -0.195601, -0.68154, -0.672274, 30],
                        [-0.19925116, -0.199134805, -0.679549605, -0.67945249, 30]]
