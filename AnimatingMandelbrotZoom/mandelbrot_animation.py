@@ -1,9 +1,10 @@
 from matplotlib import pyplot as plt
 import time
 import numpy
+import numba
 
-pRE = 1000
-pIM = 1000
+pRE = 600
+pIM = 600
 threshold = 2
 
 
@@ -52,17 +53,17 @@ def main(x_0, y_0, x_1, y_1):
     # Apply the Mandelbrot formula
     computed_mandelbrot = mandelbrot(complete_space)
 
-    # print("Computation time:", time.time() - start_time)
+    print("Computation time:", time.time() - start_time)
 
     return computed_mandelbrot
 
 
 if __name__ == '__main__':
 
-    interest_points = [[-2.25, 0.75, -1.25, 1.25, 40],
-                       [-0.352917, -0.127973, -0.722195, -0.534797, 40],
-                       [-0.206791, -0.195601, -0.68154, -0.672274, 40],
-                       [-0.199292, -0.199071, -0.679454, -0.679329, 40]]
+    interest_points = [[-2.25, 0.75, -1.25, 1.25],
+                       [-0.352917, -0.127973, -0.722195, -0.534797, 30],
+                       [-0.206791, -0.195601, -0.68154, -0.672274, 30],
+                       [-0.19925116, -0.199134805, -0.679549605, -0.67945249, 30]]
     for z in range(1, len(interest_points)):
         start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
         target_x = (interest_points[z][0], interest_points[z][1])
@@ -85,7 +86,5 @@ if __name__ == '__main__':
             computed_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
             plt.imshow(computed_mandelbrot, cmap='magma')
             plt.pause(0.01)
-            plt.title("Mandelbrot set: "+str(i))
     plt.show()
-    # Computation time: 2.12s
 
