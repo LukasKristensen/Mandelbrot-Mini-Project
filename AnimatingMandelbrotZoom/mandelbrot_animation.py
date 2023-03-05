@@ -4,6 +4,7 @@ import numpy
 import numba
 import cv2
 import os
+import datetime
 
 pRE = 500
 pIM = 500
@@ -11,6 +12,9 @@ threshold = 2
 
 frames_between_points = 100
 frame_rate = round(frames_between_points/6)
+
+output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-")}.avi'
+print(f'Video save destination: {os.getcwd()}/{output_video_destination}')
 
 
 def mandelbrot(c):
@@ -74,7 +78,7 @@ if __name__ == '__main__':
                        [-0.206791, -0.195601, -0.68154, -0.672274, frames_between_points],
                        [-0.19925116, -0.199134805, -0.679549605, -0.67945249, frames_between_points]]
 
-    video_writer = cv2.VideoWriter('Mandelbrot_Animated_Zoom.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
+    video_writer = cv2.VideoWriter(output_video_destination, cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
 
     for z in range(1, len(interest_points)):
         start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
@@ -94,10 +98,12 @@ if __name__ == '__main__':
             current_x = (start_x[0]+step_x[0]*i, start_x[1]+step_x[1]*i)
             current_y = (start_y[0]+step_y[0]*i, start_y[1]+step_y[1]*i)
 
+            # Apply the Mandelbrot formula and generate the image
             complete_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
             plt.imshow(complete_mandelbrot, cmap='magma')
             plt.figure("output", figsize=(pIM, pRE), dpi=1)
 
+            # Formatting of matplotlib figure removing all axes and padding
             plt.axis('off')
             plt.bbox_inches = 'tight'
             plt.pad_inches = 0
@@ -105,14 +111,20 @@ if __name__ == '__main__':
             plt.margins(0, 0)
             plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
             video_writer.write(cv2.imread('tmp_hold.png'))
-            print(f'\n\nProgress: {round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)}%'
-                  f'(Video save destination: {os.getcwd()}/Mandelbrot_Animated_Zoom.avi)')
-            plt.pause(0.001)
+
+            # Progress bar and time estimation
+            progress_count = round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)
+            print(f'\n\nProgress: {round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)}%')
+            if progress_count != 0:
+                time_est = str(datetime.timedelta(seconds=((time.time() - start_render_time)/progress_count) *
+                                                          (100-progress_count))).split(":")
+                print(f'Estimated to finish in {time_est[0]}h {time_est[1]}m {time_est[2].split(".")[0]}s')
+            plt.pause(0.001)  # Pause for 1ms to allow the plot to update
 
     # Hold the last frame for 3 seconds when the video ends
     for i in range(frame_rate*3):
         video_writer.write(cv2.imread('tmp_hold.png'))
     video_writer.release()
-    os.remove('tmp_hold.png')
-    print("Video saved to:", os.getcwd() + "/Mandelbrot_Animated_Zoom.avi")
+    os.remove('tmp_hold.png')  # Remove the temporary image file
+    print("Video saved to:", os.getcwd() + "/" + output_video_destination)
     print("Complete! Total render time:", time.time() - start_render_time)
