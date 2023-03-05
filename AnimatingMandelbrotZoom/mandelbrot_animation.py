@@ -3,12 +3,13 @@ import time
 import numpy
 import numba
 import cv2
+import os
 
 pRE = 500
 pIM = 500
 threshold = 2
 
-frames_between_points = 30
+frames_between_points = 100
 frame_rate = round(frames_between_points/6)
 
 
@@ -71,8 +72,8 @@ if __name__ == '__main__':
                        [-0.206791, -0.195601, -0.68154, -0.672274, frames_between_points],
                        [-0.19925116, -0.199134805, -0.679549605, -0.67945249, frames_between_points]]
 
-    video_writer = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
-    plt.show()
+    video_writer = cv2.VideoWriter('Mandelbrot_Animated_Zoom.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
+    # plt.show()
 
     for z in range(1, len(interest_points)):
         start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
@@ -92,8 +93,9 @@ if __name__ == '__main__':
             current_x = (start_x[0]+step_x[0]*i, start_x[1]+step_x[1]*i)
             current_y = (start_y[0]+step_y[0]*i, start_y[1]+step_y[1]*i)
 
-            computed_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
-            plt.imshow(computed_mandelbrot, cmap='magma')
+            complete_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
+            plt.imshow(complete_mandelbrot, cmap='magma')
+            plt.figure("output", figsize=(pIM, pRE), dpi=1)
 
             plt.axis('off')
             plt.bbox_inches = 'tight'
@@ -102,9 +104,9 @@ if __name__ == '__main__':
             plt.margins(0, 0)
             plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
             video_writer.write(cv2.imread('tmp_hold.png'))
-            print("\nProgress:", (round(i/step_size*100, 2)/len(interest_points))+(len(interest_points)/step_size*100)*(z-1), "%")
-
-            plt.pause(0.1)
+            print(f'\n\nProgress: {round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)}%'
+                  f'(Video save destination: {os.getcwd()}/Mandelbrot_Animated_Zoom.avi)')
+            plt.pause(0.001)
 
     # Hold the last frame for 3 seconds when the video ends
     for i in range(frame_rate*3):
