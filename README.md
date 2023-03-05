@@ -4,21 +4,23 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 - To compare the performance between the algorithms run the [``main.py``](main.py) file.
 - To generate a plot showing the mandelbrot set configure one of the parameters to ``show_figure=True`` in [``main.py``](main.py).
 
+</br>
 
 ## Generated Content
 Generated sequence of zoom into fractals [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
 
-![alt text](animated_zoom_export.gif)
+![alt text](AnimatingMandelbrotZoom/animated_zoom_export.gif)
 
 
 High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
 
 
-![alt text](MandelbrotOutput.png)
+![alt text](HighResolutionRender/MandelbrotOutput.png)
 **Image computed using:**
 - Size: (1e4, 1e4)
 - Threshold: 100
 - Iterations: 100
+
 </br>
 
 ## Project Hand Ins
@@ -28,4 +30,8 @@ High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbr
 - Numba-optimized
 - Parallel using multi-processing
 - Computation analysis of speedup between parameters</br>
+
 </br>
+
+## Group
+- Lukas Bisgaard Kristensen 
