@@ -2,10 +2,14 @@ from matplotlib import pyplot as plt
 import time
 import numpy
 import numba
+import cv2
 
-pRE = 600
-pIM = 600
+pRE = 500
+pIM = 500
 threshold = 2
+
+frames_between_points = 30
+frame_rate = round(frames_between_points/6)
 
 
 def mandelbrot(c):
@@ -62,10 +66,14 @@ if __name__ == '__main__':
     # Coordinates to interpolate between
     # First four coordinates are the start and end points of the interpolation
     # The fifth coordinate is the number of steps to take between the start and end points
-    interest_points = [[-2.25, 0.75, -1.25, 1.25, 30],
-                       [-0.352917, -0.127973, -0.722195, -0.534797, 30],
-                       [-0.206791, -0.195601, -0.68154, -0.672274, 30],
-                       [-0.19925116, -0.199134805, -0.679549605, -0.67945249, 30]]
+    interest_points = [[-2.25, 0.75, -1.25, 1.25, frames_between_points],
+                       [-0.352917, -0.127973, -0.722195, -0.534797, frames_between_points],
+                       [-0.206791, -0.195601, -0.68154, -0.672274, frames_between_points],
+                       [-0.19925116, -0.199134805, -0.679549605, -0.67945249, frames_between_points]]
+
+    video_writer = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
+    plt.show()
+
     for z in range(1, len(interest_points)):
         start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
         target_x = (interest_points[z][0], interest_points[z][1])
@@ -86,6 +94,21 @@ if __name__ == '__main__':
 
             computed_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
             plt.imshow(computed_mandelbrot, cmap='magma')
-            plt.pause(0.01)
-    plt.show()
+
+            plt.axis('off')
+            plt.bbox_inches = 'tight'
+            plt.pad_inches = 0
+            plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+            plt.margins(0, 0)
+            plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
+            video_writer.write(cv2.imread('tmp_hold.png'))
+            print("\nProgress:", (round(i/step_size*100, 2)/len(interest_points))+(len(interest_points)/step_size*100)*(z-1), "%")
+
+            plt.pause(0.1)
+
+    # Hold the last frame for 3 seconds when the video ends
+    for i in range(frame_rate*3):
+        video_writer.write(cv2.imread('tmp_hold.png'))
+    video_writer.release()
+    # plt.show()
 
