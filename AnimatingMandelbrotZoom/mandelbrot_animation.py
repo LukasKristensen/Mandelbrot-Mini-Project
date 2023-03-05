@@ -58,12 +58,14 @@ def main(x_0, y_0, x_1, y_1):
     # Apply the Mandelbrot formula
     computed_mandelbrot = mandelbrot(complete_space)
 
-    print("Computation time:", time.time() - start_time)
+    print("Frame computation time:", time.time() - start_time)
 
     return computed_mandelbrot
 
 
 if __name__ == '__main__':
+    start_render_time = time.time()
+
     # Coordinates to interpolate between
     # First four coordinates are the start and end points of the interpolation
     # The fifth coordinate is the number of steps to take between the start and end points
@@ -113,4 +115,4 @@ if __name__ == '__main__':
     video_writer.release()
     os.remove('tmp_hold.png')
     print("Video saved to:", os.getcwd() + "/Mandelbrot_Animated_Zoom.avi")
-    print("Complete!")
+    print("Complete! Total render time:", time.time() - start_render_time)

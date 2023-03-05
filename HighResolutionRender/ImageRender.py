@@ -4,8 +4,8 @@ import numba
 from matplotlib import pyplot as plt
 import time
 
-pRE = 10000
-pIM = 10000
+pRE = 1000
+pIM = 1000
 threshold = 100
 
 
@@ -36,11 +36,15 @@ def main(show_figure=True, save_image=False):
         plt.imshow(solution, cmap='magma')
         plt.show()
     if save_image:
-        plt.figure(figsize=(15000,15000), dpi=1)
+        plt.figure(figsize=(1000,1000), dpi=1)
         plt.imshow(solution, cmap='magma')
         print("Plot size:", plt.gcf().get_size_inches()*plt.gcf().dpi)
         plt.axis('off')
-        plt.savefig(f'mandelbrot_numba_{str(datetime.datetime.now()).replace(":","-")}.png', dpi=2, bbox_inches='tight', pad_inches=0)
+        plt.bbox_inches = 'tight'
+        plt.pad_inches = 0
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.margins(0,0)
+        plt.savefig(f'mandelbrot_numba_{str(datetime.datetime.now()).replace(":","-")}.png')
 
 
 if __name__ == '__main__':
