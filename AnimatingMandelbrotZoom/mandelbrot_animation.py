@@ -73,7 +73,6 @@ if __name__ == '__main__':
                        [-0.19925116, -0.199134805, -0.679549605, -0.67945249, frames_between_points]]
 
     video_writer = cv2.VideoWriter('Mandelbrot_Animated_Zoom.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
-    # plt.show()
 
     for z in range(1, len(interest_points)):
         start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
@@ -112,5 +111,6 @@ if __name__ == '__main__':
     for i in range(frame_rate*3):
         video_writer.write(cv2.imread('tmp_hold.png'))
     video_writer.release()
-    # plt.show()
-
+    os.remove('tmp_hold.png')
+    print("Video saved to:", os.getcwd() + "/Mandelbrot_Animated_Zoom.avi")
+    print("Complete!")
