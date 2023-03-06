@@ -12,7 +12,7 @@ Generated sequence of zoom into fractals [``AnimatingMandelbrotZoom/mandelbrot_a
 ![alt text](AnimatingMandelbrotZoom/animated_zoom_export.gif)
 
 
-High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
+High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](HighResolutionRender/ImageRender.py)
 
 
 ![alt text](HighResolutionRender/MandelbrotOutput.png)
@@ -20,6 +20,16 @@ High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbr
 - Size: (1e4, 1e4)
 - Threshold: 100
 - Iterations: 100
+
+</br>
+
+## Setup
+Install the necessary packages by running the command within the root project directory:
+
+```shell
+pip install -r requirements.txt
+```
+
 
 </br>
 
