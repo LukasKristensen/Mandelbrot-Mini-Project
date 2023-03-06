@@ -1,7 +1,6 @@
 from matplotlib import pyplot as plt
 import time
 import numpy
-import numba
 import cv2
 import os
 import datetime
@@ -9,8 +8,9 @@ import datetime
 pRE = 500
 pIM = 500
 threshold = 2
+iterations = 100
 
-frames_between_points = 100
+frames_between_points = 30
 frame_rate = round(frames_between_points/6)
 
 output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-")}.avi'
@@ -33,7 +33,7 @@ def mandelbrot(c):
     divergence_time = numpy.zeros(c.shape, dtype=numpy.float32)
 
     # Iterate over the complex plane
-    for i in range(100):
+    for i in range(iterations):
         # Apply the Mandelbrot formula
         z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
 
@@ -114,11 +114,7 @@ if __name__ == '__main__':
 
             # Progress bar and time estimation
             progress_count = round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)
-            print(f'\n\nProgress: {round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)}%')
-            if progress_count != 0:
-                time_est = str(datetime.timedelta(seconds=((time.time() - start_render_time)/progress_count) *
-                                                          (100-progress_count))).split(":")
-                print(f'Estimated to finish in {time_est[0]}h {time_est[1]}m {time_est[2].split(".")[0]}s')
+            print(f'\n\nProgress: {progress_count}%')
             plt.pause(0.001)  # Pause for 1ms to allow the plot to update
 
     # Hold the last frame for 3 seconds when the video ends
