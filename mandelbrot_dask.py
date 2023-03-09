@@ -1,0 +1,75 @@
+from matplotlib import pyplot as plt
+import time
+import numpy
+import multiprocessing
+import dask
+from dask.distributed import Client
+
+pRE = 1000
+pIM = 1000
+threshold = 2
+iterations = 100
+
+performance_metrics = []
+
+
+def mandelbrot(c):
+    """
+    Generate a Mandelbrot set using vectorized numpy operations.
+
+    :param c:
+    :return mandelbrot:
+    """
+    # Generate a 2D array of ones, which is then converted to a boolean data type array
+    mandelbrot_mask = numpy.ones_like(c, dtype=bool)
+    # Generate a 2D array of zeros, which is then converted to a complex data type array
+    z = numpy.zeros_like(c, dtype=complex)
+    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
+
+    divergence_time = numpy.zeros(c.shape, dtype=int)
+
+    # Iterate over the complex plane
+    for i in range(iterations):
+        # Apply the Mandelbrot formula
+        z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
+
+        # Check each element of the array for divergence
+        diverged = mandelbrot_mask & (numpy.abs(z) > threshold)
+        # Update the divergence time
+        divergence_time[diverged] = i
+
+        # Check if the absolute value of z is greater than the threshold
+        mandelbrot_mask[numpy.abs(z) > threshold] = False
+
+    return divergence_time
+
+
+def main(show_figure=True):
+    start_time = time.time()
+
+    # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
+    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+
+    # Generate a 2D array for each dimension of the complex plane
+    complete_space = x_space + y_space * 1j
+    complete_space = dask.
+
+    client = Client(processes=True)
+    solution_return = client.map(mandelbrot, complete_space)
+    solution_return = client.gather(solution_return)
+
+    print("Solution:", solution_return)
+
+    print("Computation time:", time.time() - start_time)
+
+    if show_figure:
+        plt.imshow(solution_return, cmap='magma')
+        plt.show()
+
+
+if __name__ == '__main__':
+    """
+    Run this file to generate a 3D plot of the computation time in relation to the number of cores and chunk size.
+    """
+    main()
