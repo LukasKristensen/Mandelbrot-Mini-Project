@@ -7,10 +7,8 @@ from dask.distributed import Client
 import dask.array as da
 import numpy
 
-import mandelbrot_numpy
+import mandel_naive_numpy
 
-pRE = 1000
-pIM = 1000
 threshold = 2
 iterations = 100
 
@@ -48,7 +46,7 @@ def mandelbrot(c):
     return divergence_time
 
 
-def dask_datatype(chunk_size, show_figure=True):
+def dask_datatype(pRE, pIM, chunk_size, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
@@ -57,7 +55,7 @@ def dask_datatype(chunk_size, show_figure=True):
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j
-    complete_space = da.from_array(complete_space, chunks=chunk_size)
+    complete_space = da.from_array(complete_space)
 
     """
     client = Client(processes=True)
@@ -81,11 +79,11 @@ def dask_datatype(chunk_size, show_figure=True):
 if __name__ == '__main__':
     print("Comparing performance of numpy and dask:")
     print("Numpy:")
-    mandelbrot_numpy.main(3000, 3000, show_figure=False)
+    mandel_naive_numpy.main(3000, 3000, show_figure=False)
     print("Dask:")
-    dask_datatype((3000, 3000), show_figure=False)
+    dask_datatype(3000, 3000, (3000, 3000), show_figure=False)
 
     print("\n\nComparing DASK with different chunk sizes:")
     chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25), (10, 10), (5, 5)]
-    for i in chunk_sizes:
-        dask_datatype(i, show_figure=False)
+    for s_chunk in chunk_sizes:
+        dask_datatype(1000, 1000, s_chunk, show_figure=False)

@@ -1,5 +1,5 @@
 import mandelbrot_naive
-import mandelbrot_numpy
+import mandelbrot_vectorized
 import mandelbrot_numba
 import mandelbrot_multicore
 import multiprocessing
@@ -23,7 +23,7 @@ def mini_project_part_1():
     print(f'\n {"-"*10} (a) Implemented using naive approach {"-"*10}')
     mandelbrot_naive.main(show_figure=False)
     print(f'\n {"-"*10} (b) Implemented using numpy vectorized {"-"*10}')
-    mandelbrot_numpy.main(1000, 1000, show_figure=False)
+    mandelbrot_vectorized.main(1000, 1000, show_figure=False)
     print(f'\n {"-"*10} (c) Implemented using numba {"-"*10}')
     mandelbrot_numba.main(show_figure=False)
     print(f'\n {"-"*10} (d) Implemented using multiprocessing {"-"*10}')
