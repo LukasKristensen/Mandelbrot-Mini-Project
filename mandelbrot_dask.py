@@ -4,6 +4,10 @@ import numpy
 import multiprocessing
 import dask
 from dask.distributed import Client
+import dask.array as da
+import numpy
+
+import mandelbrot_numpy
 
 pRE = 1000
 pIM = 1000
@@ -44,7 +48,7 @@ def mandelbrot(c):
     return divergence_time
 
 
-def main(show_figure=True):
+def dask_datatype(chunk_size, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
@@ -53,15 +57,21 @@ def main(show_figure=True):
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j
-    complete_space = dask.
+    complete_space = da.from_array(complete_space, chunks=chunk_size)
 
+    """
     client = Client(processes=True)
+    print("Client created:", client)
     solution_return = client.map(mandelbrot, complete_space)
+    print("Solution returned:", solution_return)
     solution_return = client.gather(solution_return)
 
     print("Solution:", solution_return)
+    """
 
-    print("Computation time:", time.time() - start_time)
+    solution_return = complete_space.map_blocks(mandelbrot, dtype=numpy.int32).compute()
+    end_time = time.time()
+    print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time,3),"s")
 
     if show_figure:
         plt.imshow(solution_return, cmap='magma')
@@ -69,7 +79,13 @@ def main(show_figure=True):
 
 
 if __name__ == '__main__':
-    """
-    Run this file to generate a 3D plot of the computation time in relation to the number of cores and chunk size.
-    """
-    main()
+    print("Comparing performance of numpy and dask:")
+    print("Numpy:")
+    mandelbrot_numpy.main(3000, 3000, show_figure=False)
+    print("Dask:")
+    dask_datatype((3000, 3000), show_figure=False)
+
+    print("\n\nComparing DASK with different chunk sizes:")
+    chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25), (10, 10), (5, 5)]
+    for i in chunk_sizes:
+        dask_datatype(i, show_figure=False)

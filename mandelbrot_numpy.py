@@ -2,10 +2,6 @@ from matplotlib import pyplot as plt
 import time
 import numpy
 
-pRE = 1000
-pIM = 1000
-threshold = 2
-
 
 def mandelbrot(c):
     """
@@ -28,17 +24,17 @@ def mandelbrot(c):
         z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
 
         # Check each element of the array for divergence
-        diverged = mandelbrot_mask & (numpy.abs(z) > threshold)
+        diverged = mandelbrot_mask & (numpy.abs(z) > 2)
         # Update the divergence time
         divergence_time[diverged] = i
 
         # Check if the absolute value of z is greater than the threshold
-        mandelbrot_mask[numpy.abs(z) > threshold] = False
+        mandelbrot_mask[numpy.abs(z) > 2] = False
 
     return divergence_time
 
 
-def main(show_figure=True):
+def main(pRE, pIM, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
@@ -51,7 +47,8 @@ def main(show_figure=True):
     # Apply the Mandelbrot formula
     computed_mandelbrot = mandelbrot(complete_space)
 
-    print("Computation time:", time.time() - start_time)
+    end_time = time.time()
+    print("Size:", pRE, pIM, "Computation time:", round(end_time-start_time, 3), "s")
 
     if show_figure:
         plt.imshow(computed_mandelbrot, cmap='magma')
@@ -59,6 +56,6 @@ def main(show_figure=True):
 
 
 if __name__ == '__main__':
-    main()
+    main(1000, 1000)
     # Computation time: 2.12s
 

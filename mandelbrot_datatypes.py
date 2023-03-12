@@ -4,10 +4,10 @@ from matplotlib import pyplot as plt
 import time
 import numba
 
-pRE = 10000
-pIM = 10000
+pRE = 1000
+pIM = 1000
 iterations = 100
-threshold = 100
+threshold = 2
 
 
 def mandelbrot(data_type):
@@ -54,9 +54,4 @@ def main(show_figure=False):
 
 if __name__ == '__main__':
     main()
-    print("")
-    main()
-    print("")
-    main()
-    # Computation time: 1.39s
 
