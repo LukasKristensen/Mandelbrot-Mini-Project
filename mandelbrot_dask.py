@@ -8,6 +8,7 @@ import dask.array as da
 import numpy
 
 import mandel_naive_numpy
+import mandelbrot_vectorized
 
 threshold = 2
 iterations = 100
@@ -40,50 +41,72 @@ def mandelbrot(c):
         # Update the divergence time
         divergence_time[diverged] = i
 
-        # Check if the absolute value of z is greater than the threshold
+        # Stops early if the absolute value of z is greater than the threshold
         mandelbrot_mask[numpy.abs(z) > threshold] = False
 
     return divergence_time
 
 
-def dask_datatype(pRE, pIM, chunk_size, show_figure=True):
+def dask_local_distribution(pRE, pIM, chunk_size, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
     x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
     y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
-
     # Generate a 2D array for each dimension of the complex plane
-    complete_space = x_space + y_space * 1j
-    complete_space = da.from_array(complete_space)
-
-    """
-    client = Client(processes=True)
-    print("Client created:", client)
-    solution_return = client.map(mandelbrot, complete_space)
-    print("Solution returned:", solution_return)
-    solution_return = client.gather(solution_return)
-
-    print("Solution:", solution_return)
-    """
+    complete_space = da.from_array(x_space + y_space * 1j, chunks=chunk_size)
 
     solution_return = complete_space.map_blocks(mandelbrot, dtype=numpy.int32).compute()
     end_time = time.time()
-    print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time,3),"s")
 
+    print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time,3),"s")
     if show_figure:
         plt.imshow(solution_return, cmap='magma')
         plt.show()
 
 
-if __name__ == '__main__':
-    print("Comparing performance of numpy and dask:")
-    print("Numpy:")
-    mandel_naive_numpy.main(3000, 3000, show_figure=False)
-    print("Dask:")
-    dask_datatype(3000, 3000, (3000, 3000), show_figure=False)
+def dask_distributed_execution(client, pRE, pIM, chunk_size, show_figure=False):
+    start_time = time.time()
 
-    print("\n\nComparing DASK with different chunk sizes:")
-    chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25), (10, 10), (5, 5)]
+    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+    complete_space = da.from_array(x_space + y_space * 1j, chunks=chunk_size)
+
+    solution_return = client.compute(complete_space.map_blocks(mandelbrot, dtype=numpy.int32)).result()
+    end_time = time.time()
+
+    print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time, 3), "s")
+    if show_figure:
+        plt.imshow(solution_return, cmap='magma')
+        plt.show()
+
+
+def main():
+    plot_size = 2000
+    fig_show = False
+    chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25)]
+
+    print("\nComparing performance of numpy and dask:")
+    print("Numpy:")
+    mandelbrot_vectorized.main(plot_size, plot_size, show_figure=fig_show)
+    print("DASK local execution:")
+    dask_local_distribution(plot_size, plot_size, (plot_size, plot_size), show_figure=fig_show)
+
+    print("\nComparing local DASK with different chunk sizes:")
     for s_chunk in chunk_sizes:
-        dask_datatype(1000, 1000, s_chunk, show_figure=False)
+        dask_local_distribution(plot_size, plot_size, s_chunk, show_figure=fig_show)
+
+    client_distribute = Client()
+    print("Creating a client for distributed DASK execution:", client_distribute)
+    print("Dashboard for statistics:",client_distribute.dashboard_link)
+
+    print("\nComparing distributed DASK with different chunk sizes:")
+    for s_chunk in chunk_sizes:
+        dask_distributed_execution(client_distribute, plot_size, plot_size, s_chunk, show_figure=fig_show)
+
+    print("Results:", client_distribute.dashboard_link)
+    client_distribute.close()
+
+
+if __name__ == "__main__":
+    main()
