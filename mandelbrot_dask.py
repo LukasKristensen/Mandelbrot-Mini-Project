@@ -6,13 +6,10 @@ import dask
 from dask.distributed import Client
 import dask.array as da
 import numpy
-
-import mandel_naive_numpy
 import mandelbrot_vectorized
 
 threshold = 2
 iterations = 100
-
 performance_metrics = []
 
 
@@ -24,25 +21,28 @@ def mandelbrot(c):
     :return mandelbrot:
     """
     # Generate a 2D array of ones, which is then converted to a boolean data type array
-    mandelbrot_mask = numpy.ones_like(c, dtype=bool)
-    # Generate a 2D array of zeros, which is then converted to a complex data type array
-    z = numpy.zeros_like(c, dtype=complex)
-    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
+    mandelbrot_mask = da.ones_like(c, dtype=bool)
 
-    divergence_time = numpy.zeros(c.shape, dtype=int)
+    # Generate a 2D array of zeros, which is then converted to a complex data type array
+    z = da.zeros_like(c, dtype=complex)
+
+    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
+    divergence_time = da.zeros(c.shape, dtype=int)
+
+    # dask where, dask mask, dask abs, dask astype, dask reshape, dask compute
 
     # Iterate over the complex plane
     for i in range(iterations):
         # Apply the Mandelbrot formula
-        z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
+        z = z * z + c
 
         # Check each element of the array for divergence
-        diverged = mandelbrot_mask & (numpy.abs(z) > threshold)
+        diverged = mandelbrot_mask & (da.abs(z) > threshold)
         # Update the divergence time
         divergence_time[diverged] = i
 
         # Stops early if the absolute value of z is greater than the threshold
-        mandelbrot_mask[numpy.abs(z) > threshold] = False
+        mandelbrot_mask[da.abs(z) > threshold] = False
 
     return divergence_time
 
@@ -82,7 +82,7 @@ def dask_distributed_execution(client, pRE, pIM, chunk_size, show_figure=False):
 
 
 def main():
-    plot_size = 2000
+    plot_size = 1000
     fig_show = False
     chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25)]
 
