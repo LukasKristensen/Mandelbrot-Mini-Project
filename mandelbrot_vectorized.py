@@ -11,12 +11,12 @@ def mandelbrot(c):
     :return mandelbrot:
     """
     # Generate a 2D array of ones, which is then converted to a boolean data type array
-    mandelbrot_mask = numpy.ones_like(c, dtype=bool)
-    # Generate a 2D array of zeros, which is then converted to a complex data type array
-    z = numpy.zeros_like(c, dtype=complex)
-    # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
+    mandelbrot_mask = numpy.ones_like(c, dtype=numpy.bool)
 
-    divergence_time = numpy.zeros(c.shape, dtype=int)
+    # Generate a 2D array of zeros, which is then converted to a complex data type array
+    z = numpy.zeros_like(c, dtype=numpy.complex)
+
+    divergence_time = numpy.zeros(c.shape, dtype=numpy.float16)
 
     # Iterate over the complex plane
     for i in range(100):
@@ -38,8 +38,8 @@ def main(pRE, pIM, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
-    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+    x_space = numpy.linspace(-2.3, 0.8, pRE, dtype=numpy.float16).reshape((1, pRE))
+    y_space = numpy.linspace(-1.2, 1.2, pIM, dtype=numpy.float16).reshape((pIM, 1))
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j
@@ -57,5 +57,4 @@ def main(pRE, pIM, show_figure=True):
 
 if __name__ == '__main__':
     main(1000, 1000)
-    # Computation time: 2.12s
 

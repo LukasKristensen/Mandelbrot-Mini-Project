@@ -4,8 +4,8 @@ from matplotlib import pyplot as plt
 import time
 import numba
 
-pRE = 1000
-pIM = 1000
+pRE = 10000
+pIM = 10000
 iterations = 100
 threshold = 2
 

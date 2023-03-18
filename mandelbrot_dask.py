@@ -1,16 +1,11 @@
 from matplotlib import pyplot as plt
 import time
-import numpy
-import multiprocessing
-import dask
 from dask.distributed import Client
 import dask.array as da
-import numpy
 import mandelbrot_vectorized
 
 threshold = 2
 iterations = 100
-performance_metrics = []
 
 
 def mandelbrot(c):
@@ -29,8 +24,6 @@ def mandelbrot(c):
     # z is iteratively updated with the Mandelbrot formula: z = z^2 + c
     divergence_time = da.zeros(c.shape, dtype=int)
 
-    # dask where, dask mask, dask abs, dask astype, dask reshape, dask compute
-
     # Iterate over the complex plane
     for i in range(iterations):
         # Apply the Mandelbrot formula
@@ -38,10 +31,11 @@ def mandelbrot(c):
 
         # Check each element of the array for divergence
         diverged = mandelbrot_mask & (da.abs(z) > threshold)
+
         # Update the divergence time
         divergence_time[diverged] = i
 
-        # Stops early if the absolute value of z is greater than the threshold
+        # Stops early if the absolute value of z is greater than the threshold (point diverged)
         mandelbrot_mask[da.abs(z) > threshold] = False
 
     return divergence_time
@@ -51,12 +45,12 @@ def dask_local_distribution(pRE, pIM, chunk_size, show_figure=True):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
-    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+    x_space = da.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = da.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
     # Generate a 2D array for each dimension of the complex plane
-    complete_space = da.from_array(x_space + y_space * 1j, chunks=chunk_size)
+    complete_space = da.rechunk(x_space + y_space * 1j, chunks=chunk_size)
 
-    solution_return = complete_space.map_blocks(mandelbrot, dtype=numpy.int32).compute()
+    solution_return = complete_space.map_blocks(mandelbrot).compute()
     end_time = time.time()
 
     print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time,3),"s")
@@ -68,11 +62,11 @@ def dask_local_distribution(pRE, pIM, chunk_size, show_figure=True):
 def dask_distributed_execution(client, pRE, pIM, chunk_size, show_figure=False):
     start_time = time.time()
 
-    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
-    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+    x_space = da.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
+    y_space = da.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
     complete_space = da.from_array(x_space + y_space * 1j, chunks=chunk_size)
 
-    solution_return = client.compute(complete_space.map_blocks(mandelbrot, dtype=numpy.int32)).result()
+    solution_return = client.compute(complete_space.map_blocks(mandelbrot)).result()
     end_time = time.time()
 
     print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time, 3), "s")
@@ -84,13 +78,13 @@ def dask_distributed_execution(client, pRE, pIM, chunk_size, show_figure=False):
 def main():
     plot_size = 1000
     fig_show = False
-    chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50), (25, 25)]
+    chunk_sizes = [(1000, 1000), (500, 500), (200, 200), (100, 100), (50, 50)]
 
     print("\nComparing performance of numpy and dask:")
     print("Numpy:")
-    mandelbrot_vectorized.main(plot_size, plot_size, show_figure=fig_show)
+    mandelbrot_vectorized.main(5000, 5000, show_figure=fig_show)
     print("DASK local execution:")
-    dask_local_distribution(plot_size, plot_size, (plot_size, plot_size), show_figure=fig_show)
+    dask_local_distribution(5000, 5000, (5000, 5000), show_figure=fig_show)
 
     print("\nComparing local DASK with different chunk sizes:")
     for s_chunk in chunk_sizes:
