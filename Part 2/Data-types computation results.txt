@@ -1,3 +1,0 @@
-Data-type: <class 'numpy.float64'> Computation time: 193.15727 s
-Data-type: <class 'numpy.float32'> Computation time: 189.50313 s
-Data-type: <class 'numpy.float16'> Computation time: 189.09297 s

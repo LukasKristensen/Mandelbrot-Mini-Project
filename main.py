@@ -36,20 +36,12 @@ def mini_project_part_2():
     print(f'\n {"-"*10} (a) Implemented using different data-types {"-"*10}')
     mandelbrot_datatypes.main(show_figure=False)
     print(f'\n {"-"*10} (b) Implemented using Dask Array datatype {"-"*10}')
-    mandelbrot_dask.main(show_figure=False)
+    mandelbrot_dask.main()
 
 
 if __name__ == '__main__':
     mini_project_part_2()
 
-
-# todo: Mini-project Part 2
-#       [x] (a) Implement with different data-types
-#       [x] (b) Implement with Dask Array datatype
-#       [ ] (c) Execution with local using Dask
-#       [ ] (d) Execution with distributed using Dask
-#       [ ] (e) Above implementations with different chunk sizes
-#       [ ] (f) Implement optimization/improvement e.g. stopping when divergence occurs
 
 # todo: Mini-project Part 3
 
