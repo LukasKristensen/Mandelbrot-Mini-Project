@@ -64,7 +64,7 @@ def dask_distributed_execution(client, pRE, pIM, chunk_size, show_figure=False):
 
     x_space = da.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
     y_space = da.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
-    complete_space = da.from_array(x_space + y_space * 1j, chunks=chunk_size)
+    complete_space = da.rechunk(x_space + y_space * 1j, chunks=chunk_size)
 
     solution_return = client.compute(complete_space.map_blocks(mandelbrot)).result()
     end_time = time.time()
