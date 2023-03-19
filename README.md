@@ -41,6 +41,13 @@ pip install -r requirements.txt
 - Parallel using multi-processing
 - Computation analysis of speedup between parameters</br>
 
+**Mini-Project Part 2** ([``Hand-In``](Part%202%20-%20DASK%20and%20Datatypes/Numerical%20Scientific%20Computing%20Mini%20Project%20Part%202.pdf))</br>
+- Performance of data types (Numpy.Float64, Numpy.Float32, Numpy.Float16)
+- Dask compared to numpy
+- Dask local execution
+- Dask distributed execution
+- Performance optimizations (Early stopping, data types, lazy loading)
+
 </br>
 
 ## Group
