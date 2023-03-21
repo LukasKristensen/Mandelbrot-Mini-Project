@@ -1,5 +1,4 @@
 import numpy
-from matplotlib import pyplot as plt
 import time
 
 
@@ -39,7 +38,7 @@ def mandelbrot(float_data_type, complex_data_type):
     end_time = time.time()
     print("Float data-type:", float_data_type, "Complex data-type:", complex_data_type,
           "Computation time:", round(end_time - start_time, 5), "s")
-    return round(end_time - start_time, 5)
+    return divergence_time
 
 
 def main(show_figure=False):

@@ -85,9 +85,9 @@ def main():
 
     print("\nComparing performance of numpy and dask:")
     print("Numpy:")
-    mandelbrot_vectorized.main(10000, 10000, show_figure=fig_show)
+    mandelbrot_vectorized.main(8000, 8000, show_figure=fig_show)
     print("DASK local execution:")
-    dask_local_distribution(10000, 10000, (10000, 10000), show_figure=fig_show)
+    dask_local_distribution(8000, 8000, (8000, 8000), show_figure=fig_show)
 
     print("\nComparing local DASK with different chunk sizes:")
     for s_chunk in chunk_sizes:
