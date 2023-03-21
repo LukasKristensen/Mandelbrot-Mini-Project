@@ -9,13 +9,13 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 ## Generated Content
 Generated sequence of zoom into fractals [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
 
-![alt text](AnimatingMandelbrotZoom/animated_zoom_export.gif)
+![img](AnimatingMandelbrotZoom/animated_zoom_export.gif)
 
 
 High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](HighResolutionRender/ImageRender.py)
 
 
-![alt text](HighResolutionRender/MandelbrotOutput.png)
+![img](HighResolutionRender/MandelbrotOutput.png)
 **Image computed using:**
 - Size: (1e4, 1e4)
 - Iterations: 100
