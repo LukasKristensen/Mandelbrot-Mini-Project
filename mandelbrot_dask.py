@@ -54,7 +54,7 @@ def dask_local_distribution(pRE, pIM, chunk_size, show_figure=True):
     solution_return = complete_space.map_blocks(mandelbrot).compute()
     end_time = time.time()
 
-    print("Chunk size:", chunk_size, "Computation time:", round(end_time-start_time,3),"s")
+    print("Computation time:", round(end_time - start_time, 3), "s")
     if show_figure:
         plt.imshow(solution_return, cmap='magma')
         plt.show()

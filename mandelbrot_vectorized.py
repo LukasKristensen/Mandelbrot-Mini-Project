@@ -48,7 +48,7 @@ def main(pRE, pIM, show_figure=True):
     computed_mandelbrot = mandelbrot(complete_space)
 
     end_time = time.time()
-    print("Size:", pRE, pIM, "Computation time:", round(end_time-start_time, 3), "s")
+    print("Computation time:", round(end_time - start_time, 3), "s")
 
     if show_figure:
         plt.imshow(computed_mandelbrot, cmap='magma')

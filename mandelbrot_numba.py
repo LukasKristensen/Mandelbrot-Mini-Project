@@ -2,8 +2,6 @@ import numba
 from matplotlib import pyplot as plt
 import time
 
-pRE = 1000
-pIM = 1000
 threshold = 2
 
 
@@ -19,7 +17,7 @@ def mandelbrot(x, y):
     return 0
 
 
-def main(show_figure=True):
+def main(pRE, pIM, show_figure=True):
     start_time = time.time()
     solution = [[(0, 0, 0) for x in range(pRE)] for y in range(pIM)]
 
@@ -27,7 +25,8 @@ def main(show_figure=True):
         for y in range(pIM):
             solution[y][x] = mandelbrot((x-(pRE*0.75))/(pRE*0.35), (y-(pRE*0.5))/(pRE*0.35))
 
-    print("Computation time:", time.time() - start_time)
+    end_time = time.time()
+    print("Computation time:", round(end_time - start_time, 3), "s")
 
     if show_figure:
         plt.imshow(solution, cmap='magma')
@@ -35,6 +34,5 @@ def main(show_figure=True):
 
 
 if __name__ == '__main__':
-    main()
-    # Computation time: 1.39s
+    main(1000, 1000)
 
