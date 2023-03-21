@@ -14,7 +14,7 @@ def mandelbrot(c):
     mandelbrot_mask = numpy.ones_like(c, dtype=numpy.bool)
 
     # Generate a 2D array of zeros, which is then converted to a complex data type array
-    z = numpy.zeros_like(c, dtype=numpy.complex)
+    z = numpy.zeros_like(c, dtype=numpy.complex64)
 
     divergence_time = numpy.zeros(c.shape, dtype=numpy.float16)
 
