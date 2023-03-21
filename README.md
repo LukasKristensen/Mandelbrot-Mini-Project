@@ -12,16 +12,35 @@ Generated sequence of zoom into fractals [``AnimatingMandelbrotZoom/mandelbrot_a
 ![alt text](AnimatingMandelbrotZoom/animated_zoom_export.gif)
 
 
-High resoultion render of the mandelbrot set [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](HighResolutionRender/ImageRender.py)
+High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](HighResolutionRender/ImageRender.py)
 
 
 ![alt text](HighResolutionRender/MandelbrotOutput.png)
 **Image computed using:**
 - Size: (1e4, 1e4)
-- Threshold: 100
 - Iterations: 100
 
 </br>
+
+## Performance Results
+| Approach    | Computation Time (s) |
+| ----------- | ----------- |
+| [``mandelbrot_naive.py``](mandelbrot_naive.py)| 393.58 |
+| [``mandelbrot_vectorized.py``](mandelbrot_vectorized.py)| 160.92 |
+| [``mandelbrot_numba.py``](mandelbrot_numba.py)| 115.25 |
+| [``mandelbrot_multicore.py``](mandelbrot_multicore.py)| 37.89 |
+| [``mandelbrot_dask.py``](mandelbrot_dask.py)| 25.07 |
+
+**Parameters**
+- Size: 10.000x10.000
+- Iterations: 100
+
+**Specs**
+- Intel® Core™ i5-11300H-processor @ 3.10GHz
+- 16 GB DDR4 Ram @ 3200MHz
+
+</br>
+
 
 ## Setup
 Install the necessary packages by running the command within the root project directory:
@@ -29,9 +48,8 @@ Install the necessary packages by running the command within the root project di
 ```shell
 pip install -r requirements.txt
 ```
-
-
 </br>
+
 
 ## Project Hand Ins
 **Mini-Project Part 1** ([``Hand-In``](Part%201%20-%20Algorithms%20with%20performance%20analysis/Mini%20Project%20Report%20Part%201.pdf))</br>
