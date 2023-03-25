@@ -4,8 +4,8 @@ import numpy
 from matplotlib import pyplot as plt
 import time
 
-map_size = 2000
-iterations = 500
+map_size = 1000
+iterations = 5000
 
 
 def mandelbrot(c):
@@ -29,6 +29,7 @@ def mandelbrot(c):
 
         # Check if the absolute value of z is greater than the threshold
         mandelbrot_mask[numpy.abs(z) > 2] = False
+        print("Progress:", round(i/iterations*100,1), "%")
 
     return divergence_time
 
@@ -37,8 +38,8 @@ def main():
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-0.19925116, -0.199134805, map_size, dtype=numpy.float64).reshape((1, map_size))
-    y_space = numpy.linspace(-0.679549605, -0.67945249, map_size, dtype=numpy.float64).reshape((map_size, 1))
+    x_space = numpy.linspace(-0.7336438924199521-(4.5E-14)/2, -0.7336438924199521+(4.5E-14)/2, map_size, dtype=numpy.float64).reshape((1, map_size))
+    y_space = numpy.linspace(0.2455211406714035-(4.5E-14)/2, 0.2455211406714035+(4.5E-14)/2, map_size, dtype=numpy.float64).reshape((map_size, 1))
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j
@@ -58,7 +59,7 @@ def main():
     plt.pad_inches = 0
     plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
     plt.margins(0, 0)
-    plt.savefig(f'mandelbrot_numba_{str(datetime.datetime.now()).replace(":","-")}.png')
+    plt.savefig(f'mandelbrot_image_render_{str(datetime.datetime.now()).replace(":","-")}.png')
 
 
 if __name__ == '__main__':

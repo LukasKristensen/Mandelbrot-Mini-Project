@@ -5,12 +5,12 @@ import cv2
 import os
 import datetime
 
-pRE = 2000
-pIM = 2000
+pRE = 1000
+pIM = 1000
 threshold = 2
 iterations = 500
 
-frames_between_points = 30
+frames_between_points = 120
 frame_rate = round(frames_between_points/6)
 
 output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-")}.avi'
