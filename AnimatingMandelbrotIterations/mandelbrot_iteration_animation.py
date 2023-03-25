@@ -7,7 +7,7 @@ import os
 pRE = 700
 pIM = 700
 threshold = 2
-iterations = 10
+iterations = 100
 
 frames_between_points = 30
 frame_rate = round(frames_between_points/6)
@@ -78,6 +78,7 @@ def save_frame(complete_mandelbrot, i):
     plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
     plt.margins(0, 0)
     plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
+    plt.close()
 
     loaded_image = cv2.imread('tmp_hold.png')
     cv2.putText(loaded_image, f'Iterations: {i}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255))

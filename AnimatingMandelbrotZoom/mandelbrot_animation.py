@@ -100,8 +100,8 @@ if __name__ == '__main__':
 
             # Apply the Mandelbrot formula and generate the image
             complete_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
-            plt.imshow(complete_mandelbrot, cmap='magma')
             plt.figure("output", figsize=(pIM, pRE), dpi=1)
+            plt.imshow(complete_mandelbrot, cmap='magma')
 
             # Formatting of matplotlib figure removing all axes and padding
             plt.axis('off')
@@ -110,6 +110,7 @@ if __name__ == '__main__':
             plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
             plt.margins(0, 0)
             plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
+            plt.close()
             video_writer.write(cv2.imread('tmp_hold.png'))
 
             # Progress bar and time estimation
