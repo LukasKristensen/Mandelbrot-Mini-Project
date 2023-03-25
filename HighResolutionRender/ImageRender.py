@@ -1,39 +1,56 @@
 import datetime
 
-import numba
+import numpy
 from matplotlib import pyplot as plt
 import time
 
-map_size = 10000
-threshold = 100
+map_size = 2000
+iterations = 500
 
 
-@numba.vectorize
-def mandelbrot(x, y):
-    c = complex(x, y)
-    z = 0
+def mandelbrot(c):
+    # Generate a 2D array of ones, which is then converted to a boolean data type array
+    mandelbrot_mask = numpy.ones_like(c, dtype=bool)
 
-    for i in range(100):
-        if abs(z) > threshold:
-            return i
-        z = z*z + c
-    return 0
+    # Generate a 2D array of zeros, which is then converted to a complex data type array
+    z = numpy.zeros_like(c, dtype=numpy.complex128)
+
+    divergence_time = numpy.zeros(c.shape, dtype=numpy.float64)
+
+    # Iterate over the complex plane
+    for i in range(iterations):
+        # Apply the Mandelbrot formula
+        z[mandelbrot_mask] = z[mandelbrot_mask] * z[mandelbrot_mask] + c[mandelbrot_mask]
+
+        # Check each element of the array for divergence
+        diverged = mandelbrot_mask & (numpy.abs(z) > 2)
+        # Update the divergence time
+        divergence_time[diverged] = i
+
+        # Check if the absolute value of z is greater than the threshold
+        mandelbrot_mask[numpy.abs(z) > 2] = False
+
+    return divergence_time
 
 
 def main():
     start_time = time.time()
-    solution = [[(0, 0, 0) for x in range(map_size)] for y in range(map_size)]
 
-    for x in range(map_size):
-        print("Progress: {:.2f}%".format((x/map_size)*100))
-        for y in range(map_size):
-            solution[y][x] = mandelbrot((x-(map_size*0.75))/(map_size*0.35), (y-(map_size*0.5))/(map_size*0.35))
+    # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
+    x_space = numpy.linspace(-0.19925116, -0.199134805, map_size, dtype=numpy.float64).reshape((1, map_size))
+    y_space = numpy.linspace(-0.679549605, -0.67945249, map_size, dtype=numpy.float64).reshape((map_size, 1))
+
+    # Generate a 2D array for each dimension of the complex plane
+    complete_space = x_space + y_space * 1j
+
+    # Apply the Mandelbrot formula
+    computed_mandelbrot = mandelbrot(complete_space)
 
     print("Computation time:", time.time() - start_time)
 
-    print("Solution size:", len(solution), len(solution[0]))
+    print("Solution size:", len(computed_mandelbrot), len(computed_mandelbrot[0]))
     plt.figure(figsize=(map_size, map_size), dpi=1)
-    plt.imshow(solution, cmap='magma', interpolation='nearest', aspect='auto')
+    plt.imshow(computed_mandelbrot, cmap='magma', interpolation='nearest', aspect='auto')
 
     print("Plot size:", plt.gcf().get_size_inches()*plt.gcf().dpi)
     plt.axis('off')
