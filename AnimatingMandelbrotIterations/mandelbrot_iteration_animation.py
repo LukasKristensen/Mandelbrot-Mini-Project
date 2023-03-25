@@ -4,8 +4,8 @@ import numpy
 import cv2
 import os
 
-pRE = 700
-pIM = 700
+pRE = 2000
+pIM = 2000
 threshold = 2
 iterations = 100
 
@@ -68,10 +68,9 @@ def main(iterations_get):
 
 
 def save_frame(complete_mandelbrot, i):
-    plt.figure("output", figsize=(pIM, pRE), dpi=1)
+    plt.figure(figsize=(pRE, pIM), dpi=1)
     plt.imshow(complete_mandelbrot, cmap='magma', interpolation='nearest', aspect='auto')
 
-    # Formatting of matplotlib figure removing all axes and padding
     plt.axis('off')
     plt.bbox_inches = 'tight'
     plt.pad_inches = 0
