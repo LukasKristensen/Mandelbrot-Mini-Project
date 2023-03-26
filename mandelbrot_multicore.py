@@ -62,6 +62,8 @@ def main(chunk_size, cores, pRE, pIM, show_figure=True):
         plt.imshow(reshaped_solution, cmap='magma')
         plt.show()
 
+    return reshaped_solution
+
 
 if __name__ == '__main__':
     """
