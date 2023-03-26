@@ -4,6 +4,7 @@ import numpy
 import cv2
 import os
 import datetime
+import multiprocessing
 
 pRE = 1000
 pIM = 1000
@@ -12,9 +13,6 @@ iterations = 500
 
 frame_rate = 60
 step_size = frame_rate*61
-
-output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-").replace(".","")}.avi'
-print(f'Video save destination: {os.getcwd()}/{output_video_destination}')
 
 
 def mandelbrot(c):
@@ -60,19 +58,19 @@ def main(x_0, y_0, x_1, y_1):
     complete_space = x_space + y_space * 1j
 
     # Apply the Mandelbrot formula
-    computed_mandelbrot = mandelbrot(complete_space)
+    pool_workers = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    solution_return = pool_workers.map(mandelbrot, complete_space, chunksize=100)
+    reshaped_solution = numpy.array(solution_return).reshape(pIM, pRE)
 
     print("Frame computation time:", time.time() - start_time)
 
-    return computed_mandelbrot
+    return reshaped_solution
 
 
 if __name__ == '__main__':
+    output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-").replace(".", "")}.avi'
+    print(f'Video save destination: {os.getcwd()}/{output_video_destination}')
     start_render_time = time.time()
-
-    # Coordinates to interpolate between
-    # First four coordinates are the start and end points of the interpolation
-    # The fifth coordinate is the number of steps to take between the start and end points
 
     start_point = [-2.25, 0.75, -1.25, 1.25]
     end_point = [-0.7336438924199521-(4.5E-14)/2, -0.7336438924199521+(4.5E-14)/2, 0.2455211406714035-(4.5E-14)/2, 0.2455211406714035+(4.5E-14)/2]
