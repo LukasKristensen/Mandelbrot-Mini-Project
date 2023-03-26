@@ -48,6 +48,14 @@ Generated sequence of zoom into fractal [``mandelbrot_iteration_animation.py``](
 | [``mandelbrot_multicore.py``](mandelbrot_multicore.py)| 37.89 |
 | [``mandelbrot_dask.py``](mandelbrot_dask.py)| 25.07 |
 
+
+|  | Complex64 | Complex128 |
+| ----------- | ----------- | ----------- |
+| np.float16 | 155.10s | 193.18s |
+| np.float32 | 157.76s | 199.54s |
+| np.float64 | 199.08s | 223.37s |
+
+
 **Parameters**
 - Size: 10.000x10.000
 - Iterations: 100
