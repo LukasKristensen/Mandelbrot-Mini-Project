@@ -5,12 +5,12 @@ import cv2
 import os
 import datetime
 
-pRE = 500
-pIM = 500
+pRE = 1000
+pIM = 1000
 threshold = 2
-iterations = 600
+iterations = 500
 
-frame_rate = 10
+frame_rate = 60
 step_size = frame_rate*61
 
 output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-").replace(".","")}.avi'
@@ -108,6 +108,8 @@ if __name__ == '__main__':
         # Progress bar and time estimation
         progress_count = round((i / step_size) * 100, 2)
         print(f'\n\nProgress: {progress_count}%')
+        if i != 0:
+            print("Remaining time:", round((time.time() - start_render_time) * (1 - (i / step_size)) / (i / step_size), 2), "seconds")
         plt.pause(0.001)  # Pause for 1ms to allow the plot to update
 
     # Hold the last frame for 3 seconds when the video ends
