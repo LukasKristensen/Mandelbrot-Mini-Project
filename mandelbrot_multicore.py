@@ -40,12 +40,12 @@ def mandelbrot(c):
     return divergence_time
 
 
-def main(chunk_size, cores, pRE, pIM, show_figure=True):
+def main(chunk_size, cores, pRE, pIM, show_figure=True, x0=-2.3, x1=0.8, y0=-1.2, y1=1.2):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-2.3, 0.8, pRE).reshape((1, pRE))
-    y_space = numpy.linspace(-1.2, 1.2, pIM).reshape((pIM, 1))
+    x_space = numpy.linspace(x0, x1, pRE).reshape((1, pRE))
+    y_space = numpy.linspace(y0, y1, pIM).reshape((pIM, 1))
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j

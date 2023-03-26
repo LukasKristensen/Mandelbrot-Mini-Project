@@ -23,7 +23,8 @@ def compute_set(x_0, y_0, x_1, y_1):
 
     start_time = time.time()
 
-    reshaped_solution = mandelbrot_multicore.main(chunk_size=100, cores=multiprocessing.cpu_count(), pRE=pRE, pIM=pIM, show_figure=False)
+    reshaped_solution = mandelbrot_multicore.main(chunk_size=100, cores=multiprocessing.cpu_count(), pRE=pRE, pIM=pIM,
+                                                  show_figure=False, x0=x_0, x1=x_1, y0=y_0, y1=y_1)
 
     print("Frame computation time:", time.time() - start_time)
 
@@ -38,7 +39,7 @@ if __name__ == '__main__':
     start_point = [-2.25, 0.75, -1.25, 1.25]
     end_point = [-0.7336438924199521-(4.5E-14)/2, -0.7336438924199521+(4.5E-14)/2, 0.2455211406714035-(4.5E-14)/2, 0.2455211406714035+(4.5E-14)/2]
 
-    video_writer = video_creator.VideoCreator(output_video_destination, pRE, pIM, frame_rate)
+    video_writer = video_creator.VideoCreator(output_video_destination, frame_rate, pRE, pIM)
 
     x0, x1, y0, y1 = start_point
     a0, a1, b0, b1 = end_point
@@ -65,7 +66,7 @@ if __name__ == '__main__':
     # Hold the last frame for 3 seconds when the video ends
     for i in range(frame_rate*3):
         video_writer.save_frame(cv2.imread('tmp_hold.png'))
-    
+
     video_writer.close()
     os.remove('tmp_hold.png')  # Remove the temporary image file
 
