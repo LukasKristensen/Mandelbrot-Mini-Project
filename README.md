@@ -13,7 +13,7 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 ### High resolution render
 High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](<High Resolution Image Render/ImageRender.py>)
 
-![img](High Resolution Image Render/MandelbrotOutput.png)
+![img](<High Resolution Image Render/MandelbrotOutput.png>)
 **Image computed using:**
 - Size: (1e4, 1e4)
 - Iterations: 100
