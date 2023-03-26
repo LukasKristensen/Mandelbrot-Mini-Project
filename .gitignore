@@ -134,3 +134,5 @@ dmypy.json
 .idea/Mandelbrot-Mini-Project.iml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
+*.avi
+AnimatingMandelbrotZoom/tmp_hold.png

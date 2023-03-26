@@ -5,15 +5,15 @@ import cv2
 import os
 import datetime
 
-pRE = 1000
-pIM = 1000
+pRE = 500
+pIM = 500
 threshold = 2
-iterations = 500
+iterations = 600
 
-frames_between_points = 120
-frame_rate = round(frames_between_points/6)
+frame_rate = 10
+step_size = frame_rate*61
 
-output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-")}.avi'
+output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-").replace(".","")}.avi'
 print(f'Video save destination: {os.getcwd()}/{output_video_destination}')
 
 
@@ -73,55 +73,42 @@ if __name__ == '__main__':
     # Coordinates to interpolate between
     # First four coordinates are the start and end points of the interpolation
     # The fifth coordinate is the number of steps to take between the start and end points
-    interest_points = [[-2.25, 0.75, -1.25, 1.25, frames_between_points],
-                       [-0.352917, -0.127973, -0.722195, -0.534797, frames_between_points],
-                       [-0.206791, -0.195601, -0.68154, -0.672274, frames_between_points],
-                       [-0.19925116, -0.199134805, -0.679549605, -0.67945249, frames_between_points]]
 
+    start_point = [-2.25, 0.75, -1.25, 1.25]
+    end_point = [-0.7336438924199521-(4.5E-14)/2, -0.7336438924199521+(4.5E-14)/2, 0.2455211406714035-(4.5E-14)/2, 0.2455211406714035+(4.5E-14)/2]
+    
     video_writer = cv2.VideoWriter(output_video_destination, cv2.VideoWriter_fourcc(*'DIVX'), frame_rate, (pRE, pIM))
 
-    for z in range(1, len(interest_points)):
-        start_x, start_y = (interest_points[z-1][0], interest_points[z-1][1]), (interest_points[z-1][2], interest_points[z-1][3])
-        target_x = (interest_points[z][0], interest_points[z][1])
-        target_y = (interest_points[z][2], interest_points[z][3])
-        step_size = interest_points[z][4]
+    for i in range(step_size):
+        t = 1-(1-i / step_size)**10
+        x0, x1, y0, y1 = start_point
+        a0, a1, b0, b1 = end_point
 
-        dif_x, dif_y = (target_x[0]-start_x[0], target_x[1]-start_x[1]), (target_y[0]-start_y[0], target_y[1]-start_y[1])
-        step_x, step_y = (dif_x[0]/step_size, dif_x[1]/step_size), (dif_y[0]/step_size, dif_y[1]/step_size)
+        current_x = [x0 + t * (a0 - x0), x1 + t * (a1 - x1)]
+        current_y = [y0 + t * (b0 - y0), y1 + t * (b1 - y1)]
 
-        print("Differences:", dif_x, dif_y)
-        print("Steps:", step_x, step_y)
-        print("\n\n")
+        # Apply the Mandelbrot formula and generate the image
+        complete_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
 
-        for i in range(step_size+1):
-            print("Applying step calculations:",step_x[0]*i, step_x[1]*i, step_y[0]*i, step_y[1]*i)
-            current_x = (start_x[0]+step_x[0]*i, start_x[1]+step_x[1]*i)
-            current_y = (start_y[0]+step_y[0]*i, start_y[1]+step_y[1]*i)
+        plt.figure(figsize=(pRE, pIM), dpi=1)
+        plt.imshow(complete_mandelbrot, cmap='magma', interpolation='nearest', aspect='auto')
+        plt.axis('off')
+        plt.bbox_inches = 'tight'
+        plt.pad_inches = 0
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.margins(0, 0)
+        plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
+        plt.close()
 
-            # Apply the Mandelbrot formula and generate the image
-            complete_mandelbrot = main(current_x[0], current_y[0], current_x[1], current_y[1])
+        loaded_image = cv2.imread('tmp_hold.png')
+        cv2.putText(loaded_image, f'X: {round(current_x[0], 4)} : {round(current_x[1], 4)}', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(loaded_image, f'Y: {round(current_y[0], 4)} : {round(current_y[0], 4)}', (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        video_writer.write(loaded_image)
 
-            plt.figure(figsize=(pRE, pIM), dpi=1)
-            plt.imshow(complete_mandelbrot, cmap='magma', interpolation='nearest', aspect='auto')
-            # plt.close()
-            print("Plot size:", plt.gcf().get_size_inches() * plt.gcf().dpi)
-            plt.axis('off')
-            plt.bbox_inches = 'tight'
-            plt.pad_inches = 0
-            plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
-            plt.margins(0, 0)
-            plt.savefig(f'tmp_hold.png', bbox_inches='tight', pad_inches=0)
-            plt.close()
-
-            loaded_image = cv2.imread('tmp_hold.png')
-            cv2.putText(loaded_image, f'X: {round(current_x[0], 4)} : {round(current_x[1], 4)}', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(loaded_image, f'Y: {round(current_y[0], 4)} : {round(current_y[0], 4)}', (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            video_writer.write(loaded_image)
-
-            # Progress bar and time estimation
-            progress_count = round(((i+((z-1)*step_size))/(len(interest_points)-1)/step_size)*100,2)
-            print(f'\n\nProgress: {progress_count}%')
-            plt.pause(0.001)  # Pause for 1ms to allow the plot to update
+        # Progress bar and time estimation
+        progress_count = round((i / step_size) * 100, 2)
+        print(f'\n\nProgress: {progress_count}%')
+        plt.pause(0.001)  # Pause for 1ms to allow the plot to update
 
     # Hold the last frame for 3 seconds when the video ends
     for i in range(frame_rate*3):
