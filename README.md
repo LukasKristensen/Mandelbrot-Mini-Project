@@ -11,9 +11,9 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 ## Generated Content
 
 ### High resolution render
-High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](HighResolutionRender/ImageRender.py)
+High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](High Resolution Image Render/ImageRender.py)
 
-![img](HighResolutionRender/MandelbrotOutput.png)
+![img](High Resolution Image Render/MandelbrotOutput.png)
 **Image computed using:**
 - Size: (1e4, 1e4)
 - Iterations: 100
@@ -22,7 +22,7 @@ High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender
 
 ### Animated Zoom
 
-Generated sequence of zoom into fractal [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
+Generated sequence of zoom into fractal [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](Zoom Animation/mandelbrot_animation.py)
 
 [Demo of zooming into fractal](https://www.youtube.com/watch?v=L2zKIrriDfI)
 
@@ -30,7 +30,7 @@ Generated sequence of zoom into fractal [``AnimatingMandelbrotZoom/mandelbrot_an
 
 ### Animated Iterations
 
-Generated sequence of zoom into fractal [``AnimatingMandelbrotIterations/mandelbrot_iteration_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
+Generated sequence of zoom into fractal [``AnimatingMandelbrotIterations/mandelbrot_iteration_animation.py``](Zoom Animation/mandelbrot_animation.py)
 
 [Demo of animating iterations](https://www.youtube.com/watch?v=8BjqgaIuses)
 
