@@ -6,14 +6,12 @@ Implementation of the Mandelbrot set for the Numerical Scientific Computing Cour
 
 </br>
 
+<!----------------------------------------->
+
 ## Generated Content
-Generated sequence of zoom into fractals [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
 
-![img](AnimatingMandelbrotZoom/animated_zoom_export.gif)
-
-
+### High resolution render
 High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender.py``](HighResolutionRender/ImageRender.py)
-
 
 ![img](HighResolutionRender/MandelbrotOutput.png)
 **Image computed using:**
@@ -21,6 +19,25 @@ High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender
 - Iterations: 100
 
 </br>
+
+### Animated Zoom
+
+Generated sequence of zoom into fractal [``AnimatingMandelbrotZoom/mandelbrot_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
+
+[Demo of zooming into fractal](https://www.youtube.com/watch?v=L2zKIrriDfI)
+
+</br>
+
+### Animated Iterations
+
+Generated sequence of zoom into fractal [``AnimatingMandelbrotIterations/mandelbrot_iteration_animation.py``](AnimatingMandelbrotZoom/mandelbrot_animation.py)
+
+[Demo of animating iterations](https://www.youtube.com/watch?v=8BjqgaIuses)
+
+</br>
+
+
+<!----------------------------------------->
 
 ## Performance Results
 | Approach    | Computation Time (s) |
@@ -41,6 +58,7 @@ High resoultion render of the mandelbrot set [``HighResolutionRender/ImageRender
 
 </br>
 
+<!----------------------------------------->
 
 ## Setup
 Install the necessary packages by running the command within the root project directory:
@@ -50,6 +68,7 @@ pip install -r requirements.txt
 ```
 </br>
 
+<!----------------------------------------->
 
 ## Project Hand Ins
 **Mini-Project Part 1** ([``Hand-In``](Part%201%20-%20Algorithms%20with%20performance%20analysis/Mini%20Project%20Report%20Part%201.pdf))</br>
@@ -67,6 +86,8 @@ pip install -r requirements.txt
 - Performance optimizations (Early stopping, data types, lazy loading)
 
 </br>
+
+<!----------------------------------------->
 
 ## Group
 - Lukas Bisgaard Kristensen 
