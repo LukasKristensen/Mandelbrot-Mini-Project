@@ -1,6 +1,6 @@
 """
     Author: Lukas Bisgaard Kristensen
-    Date: 04. April 2023
+    Date: 26. April 2023
     Course: Numerical Scientific Computing, AAU
     Description: This program computes the Mandelbrot set using OpenCL.
 """
@@ -124,7 +124,7 @@ def main(pRE, pIM, show_figure=True):
     end_time = time.time()
 
     time_computed = computation_time(start_time, end_time)
-    print("Computation time:", time_computed)
+    print("Computation time:", time_computed,"s")
 
     if show_figure:
         plt.imshow(computed_mandelbrot, cmap='magma')
@@ -134,4 +134,8 @@ def main(pRE, pIM, show_figure=True):
 
 if __name__ == '__main__':
     doctest.testmod(report=True, verbose=True)
-    main(1000, 1000)
+
+    context = pyopencl.create_some_context()
+    program = pyopencl.Program(context, """
+    
+    """).build()
