@@ -15,8 +15,8 @@ def mandelbrot(c):
     """
     Computes the Mandelbrot set using vectorized numpy operations.
 
-    :param c:
-    :return mandelbrot:
+    :param c: Input complex array
+    :return mandelbrot: Divergence time
 
     Usage examples:
     >>> mandelbrot(numpy.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) * 1j)
@@ -53,10 +53,10 @@ def generate_space(pRE, pIM, data_type):
     """
     Generates the space of the Mandelbrot set.
 
-    :param pRE:
-    :param pIM:
-    :param data_type:
-    :return:
+    :param pRE: Real part
+    :param pIM: Imaginary part
+    :param data_type: Data type of the array
+    :return: space
 
     Usage examples:
     >>> generate_space(1000, 1000, numpy.float16)
@@ -94,9 +94,9 @@ def computation_time(start_time, end_time):
     """
     Computes the time taken to compute the Mandelbrot set.
 
-    :param start_time:
-    :param end_time:
-    :return:
+    :param start_time: Start time of computation
+    :param end_time: End time of computation
+    :return: Difference between the end time and the start time
 
     Usage examples:
     >>> computation_time(0, 0.792)
@@ -107,10 +107,10 @@ def computation_time(start_time, end_time):
 
 def main(pRE, pIM, show_figure=True):
     """
-    :param pRE:
-    :param pIM:
-    :param show_figure:
-    :return:
+    :param pRE: Real part
+    :param pIM: Imaginary part
+    :param show_figure: Condition if matplotlib should show the figure
+    :return: Computation time
     """
 
     start_time = time.time()
