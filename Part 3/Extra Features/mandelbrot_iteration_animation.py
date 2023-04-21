@@ -49,8 +49,8 @@ def main(iterations_get):
     start_time = time.time()
 
     # Generates linear spaces with pRE and pIM elements respectively around the plane of the Mandelbrot set
-    x_space = numpy.linspace(-0.7336438924199521-(4.5E-14)/2, -0.7336438924199521+(4.5E-14)/2, pRE, dtype=numpy.float64).reshape((1, pRE))
-    y_space = numpy.linspace(0.2455211406714035-(4.5E-14)/2, 0.2455211406714035+(4.5E-14)/2, pIM, dtype=numpy.float64).reshape((pIM, 1))
+    x_space = numpy.linspace(-2.5-(4.5E-14)/2, 1.5+(4.5E-14)/2, pRE, dtype=numpy.float64).reshape((1, pRE))
+    y_space = numpy.linspace(-1.5-(4.5E-14)/2, 1.5+(4.5E-14)/2, pIM, dtype=numpy.float64).reshape((pIM, 1))
 
     # Generate a 2D array for each dimension of the complex plane
     complete_space = x_space + y_space * 1j
