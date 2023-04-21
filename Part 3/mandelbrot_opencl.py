@@ -11,26 +11,24 @@ import time
 import numpy
 import doctest
 
-cpu_context, cpu_queue, cpu_device, cpu_name = None, None, None, None
-gpu_context, gpu_queue, gpu_device, gpu_name = None, None, None, None
 
-for i in pyopencl.get_platforms():
-    if "Intel" in i.name:
-        print("CPU platform found")
-        cpu_platform = i
-        cpu_device = cpu_platform.get_devices()[0]
-        cpu_context = pyopencl.create_some_context()
-        cpu_queue = pyopencl.CommandQueue(cpu_context)
-        cpu_name = i.name
-    elif "NVIDIA" in i.name:
-        gpu_platform = i
-        gpu_device = gpu_platform.get_devices()[0]
-        gpu_context = pyopencl.create_some_context()
-        gpu_queue = pyopencl.CommandQueue(gpu_context)
-        gpu_name = i.name
+def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1.2, width=5000, height=5000, show_figure=True) -> None:
+    """
+    Computes the Mandelbrot set using OpenCL.
 
+    :param device: Device name of CPU/GPU
+    :param context: Context of the device
+    :param queue: Queue of the device
+    :param x_min: Minimum real value
+    :param x_max: Maximum real value
+    :param y_min: Minimum imaginary value
+    :param y_max: Maximum imaginary value
+    :param width: Width of the image
+    :param height: Height of the image
+    :param show_figure: Show the figure
+    :return:
+    """
 
-def mandelbrot_opencl(context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1.2, width=5000, height=5000, show_figure=True) -> None:
     start_time = time.time()
 
     x_space = numpy.linspace(x_min, x_max, width, dtype=numpy.float32)
@@ -62,7 +60,7 @@ def mandelbrot_opencl(context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1
             }
         }
     }
-    """).build()
+    """).build(devices=[device])
 
     mf = pyopencl.mem_flags
     q_opencl = pyopencl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=complete_space)
@@ -79,16 +77,52 @@ def mandelbrot_opencl(context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1
         plt.show()
 
 
-if __name__ == '__main__':
+def create_opencl_context(platform_name: str = "Intel"):
+    """
+    Create OpenCL context, queue, device and platform
+
+    Parameters
+    :param platform_name: Name of the platform to use
+    :return: cpu_context, cpu_queue, cpu_device, cpu_name: Output from the CPU/GPU
+    """
+
+    for i in pyopencl.get_platforms():
+        if platform_name in i.name:
+            cpu_platform = i
+            cpu_device = cpu_platform.get_devices()[0]
+            cpu_context = pyopencl.Context(devices=[cpu_device])
+            cpu_queue = pyopencl.CommandQueue(cpu_context)
+            cpu_name = i.name
+            return cpu_context, cpu_queue, cpu_device, cpu_name
+
+
+def main():
+    """
+    Main function
+
+    :return:
+    """
+
     doctest.testmod(report=True, verbose=True)
+    sizes_to_compute = [500, 1000, 2000, 5000, 10000]
 
-    print("CPU:", cpu_name)
+    cpu_context, cpu_queue, cpu_device, cpu_name = create_opencl_context(platform_name="Intel")
+    gpu_context, gpu_queue, gpu_device, gpu_name = create_opencl_context(platform_name="NVIDIA")
+
     if cpu_context:
-        for i in [500, 1000, 2000, 5000, 10000]:
-            mandelbrot_opencl(context=cpu_context, queue=cpu_queue, width=i, height=i, show_figure=False)
-    print("GPU:", gpu_name)
+        print("CPU:", cpu_name)
+        for size in sizes_to_compute:
+            mandelbrot_opencl(device=cpu_device, context=cpu_context, queue=cpu_queue, width=size, height=size, show_figure=False)
+    else:
+        print("No CPU found")
     if gpu_context:
-        for i in [500, 1000, 2000, 5000, 10000]:
-            mandelbrot_opencl(context=gpu_context, queue=gpu_queue, width=i, height=i, show_figure=False)
-    mandelbrot_opencl(context=cpu_context, queue=cpu_queue, width=10000, height=10000, show_figure=True)
+        print("GPU:", gpu_name)
+        for size in sizes_to_compute:
+            mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=size, height=size, show_figure=False)
+        mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=10000, height=10000, show_figure=True)
+    else:
+        print("No GPU found")
 
+
+if __name__ == '__main__':
+    main()

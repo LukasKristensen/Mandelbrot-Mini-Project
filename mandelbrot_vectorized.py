@@ -53,6 +53,7 @@ def main(pRE, pIM, show_figure=True):
     if show_figure:
         plt.imshow(computed_mandelbrot, cmap='magma')
         plt.show()
+    return computed_mandelbrot
 
 
 if __name__ == '__main__':
