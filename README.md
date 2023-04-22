@@ -94,7 +94,7 @@ pip install -r requirements.txt
 - Dask distributed execution
 - Performance optimizations (Early stopping, data types, lazy loading)
 
-**Mini-Project Part 2** ([``Hand-In``]())</br>
+**Mini-Project Part 3** ([``Hand-In``]())</br>
 - Docstrings
 - Unit testing
 - OpenCL
