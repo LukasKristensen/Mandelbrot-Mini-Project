@@ -4,16 +4,12 @@
     Course: Numerical Scientific Computing, AAU
     Description: This program computes the Mandelbrot set using OpenCL.
 """
-import os
-os.environ["PYOPENCL_COMPILER_OUTPUT"] = "1"
 
 import pyopencl
 import matplotlib.pyplot as plt
 import time
 import numpy
 import doctest
-
-
 
 
 def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1.2, width=5000, height=5000, show_figure=True, return_result=False) -> None:
@@ -42,8 +38,6 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
     output = numpy.empty(width * height, dtype=numpy.float32)
 
     program = pyopencl.Program(context, """
-    #pragma OPENCL EXTENSION cl_khr_fp64 : enable
-
     __kernel void mandelbrot(__global float2 *complete_space, __global float *output)
     {
         __private int gid = get_global_id(0);
