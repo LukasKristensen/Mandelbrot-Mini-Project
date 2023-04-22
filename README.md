@@ -47,7 +47,9 @@ Generated sequence of zoom into fractal [``mandelbrot_iteration_animation.py``](
 | [``mandelbrot_numba.py``](mandelbrot_numba.py)| 115.25 |
 | [``mandelbrot_multicore.py``](mandelbrot_multicore.py)| 37.89 |
 | [``mandelbrot_dask.py``](mandelbrot_dask.py)| 25.07 |
-| [``mandelbrot_opencl.py``](mandelbrot_opencl.py)| 1.07 |
+| [``mandelbrot_opencl.py``*](mandelbrot_opencl.py)| 1.07 |
+
+*Limited to float64 precision
 
 
 |  | Complex64 | Complex128 |
