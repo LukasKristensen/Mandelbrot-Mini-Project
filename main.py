@@ -5,6 +5,7 @@ import mandelbrot_multicore
 import multiprocessing
 import mandelbrot_datatypes
 import mandelbrot_dask
+import mandelbrot_opencl
 
 
 def mini_project_part_1():
@@ -46,6 +47,9 @@ def performance_compare(size):
 
     print("\nDask approach:")
     mandelbrot_dask.dask_local_distribution(show_figure=False, pRE=size, pIM=size, chunk_size=2000)
+
+    print("\nOpenCL approach:")
+    mandelbrot_opencl.main(show_figure=False, size=size)
 
 
 if __name__ == '__main__':
