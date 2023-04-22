@@ -47,6 +47,7 @@ Generated sequence of zoom into fractal [``mandelbrot_iteration_animation.py``](
 | [``mandelbrot_numba.py``](mandelbrot_numba.py)| 115.25 |
 | [``mandelbrot_multicore.py``](mandelbrot_multicore.py)| 37.89 |
 | [``mandelbrot_dask.py``](mandelbrot_dask.py)| 25.07 |
+| [``mandelbrot_opencl.py``](mandelbrot_opencl.py)| 1.07 |
 
 
 |  | Complex64 | Complex128 |
@@ -92,6 +93,12 @@ pip install -r requirements.txt
 - Dask local execution
 - Dask distributed execution
 - Performance optimizations (Early stopping, data types, lazy loading)
+
+**Mini-Project Part 2** ([``Hand-In``]())</br>
+- Docstrings
+- Unit testing
+- OpenCL
+- Memory types
 
 </br>
 
