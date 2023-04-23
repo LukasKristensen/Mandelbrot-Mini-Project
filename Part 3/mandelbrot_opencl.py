@@ -26,7 +26,23 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
     :param width: Width of the image
     :param height: Height of the image
     :param show_figure: Show the figure
-    :return:
+    :return: Mandelbrot set
+
+    >>> import pyopencl
+    >>> import numpy as np
+    >>> from matplotlib import pyplot as plt
+    >>> device = pyopencl.get_platforms()[0].get_devices()[0]
+    >>> context = pyopencl.Context([device])
+    >>> queue = pyopencl.CommandQueue(context, device)
+    >>> x_min, x_max, y_min, y_max, width, height = -2.3, 0.8, -1.2, 1.2, 5000, 5000
+    >>> mandelbrot_opencl(device, context, queue, x_min, x_max, y_min, y_max, width, height, show_figure=False)
+    array([[1., 1., 1., ..., 2., 2., 2.],
+           [1., 1., 1., ..., 2., 2., 2.],
+           [1., 1., 1., ..., 2., 2., 2.],
+           ...,
+           [1., 1., 1., ..., 2., 2., 2.],
+           [1., 1., 1., ..., 2., 2., 2.],
+           [1., 1., 1., ..., 2., 2., 2.]], dtype=float32)
     """
 
     start_time = time.time()
@@ -70,11 +86,28 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
     pyopencl.enqueue_copy(queue, output, output_opencl).wait()
 
     divergence_time = output.reshape((height, width))
-    print(f"Size: {width} OpenCL: {round(time.time() - start_time, 4)} seconds")
+    time_compute = computation_time(start_time, time.time())
+    # print(f"Computation time: {time_compute} seconds")
 
     if show_figure:
         plt.imshow(divergence_time, cmap='magma')
         plt.show()
+    return divergence_time
+
+
+def computation_time(start_time, end_time):
+    """
+    Computes the time taken to compute the Mandelbrot set.
+
+    :param start_time: Start time of computation
+    :param end_time: End time of computation
+    :return: Difference between the end time and the start time
+
+    Usage examples:
+    >>> computation_time(0, 0.792)
+    0.792
+    """
+    return round(end_time - start_time, 3)
 
 
 def create_opencl_context(platform_name: str = "Intel"):
@@ -84,6 +117,14 @@ def create_opencl_context(platform_name: str = "Intel"):
     Parameters
     :param platform_name: Name of the platform to use
     :return: cpu_context, cpu_queue, cpu_device, cpu_name: Output from the CPU/GPU
+
+    Usage examples:
+    >>> cpu_context, cpu_queue, cpu_device, cpu_name = create_opencl_context()
+    >>> assert isinstance(cpu_context, pyopencl.Context)
+    >>> assert isinstance(cpu_queue, pyopencl.CommandQueue)
+    >>> assert isinstance(cpu_device, pyopencl.Device)
+    >>> assert isinstance(cpu_name, str)
+    >>> assert cpu_name.lower() in [platform.name.lower() for platform in pyopencl.get_platforms()]
     """
 
     for i in pyopencl.get_platforms():
@@ -96,14 +137,13 @@ def create_opencl_context(platform_name: str = "Intel"):
             return cpu_context, cpu_queue, cpu_device, cpu_name
 
 
-def main():
+def main(show_fig=False):
     """
-    Main function
+    Main function for running the comparisons between CPU and GPU and plot sizes.
 
-    :return:
+    :param show_fig: Show the figure or not when finishing the computations
     """
 
-    doctest.testmod(report=True, verbose=True)
     sizes_to_compute = [500, 1000, 2000, 5000, 10000]
 
     cpu_context, cpu_queue, cpu_device, cpu_name = create_opencl_context(platform_name="Intel")
@@ -119,10 +159,11 @@ def main():
         print("GPU:", gpu_name)
         for size in sizes_to_compute:
             mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=size, height=size, show_figure=False)
-        mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=10000, height=10000, show_figure=True)
+        mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=10000, height=10000, show_figure=show_fig)
     else:
         print("No GPU found")
 
 
 if __name__ == '__main__':
-    main()
+    doctest.testmod(report=True, verbose=True)
+    main(show_fig=True)
