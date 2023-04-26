@@ -10,9 +10,14 @@ import matplotlib.pyplot as plt
 import time
 import numpy
 import doctest
+import os
+# os.environ['PYOPENCL_COMPILER_OUTPUT'] = '1'
+
+compute_local_sizes = [[]]
+compute_local_computations = [[]]
 
 
-def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1.2, width=5000, height=5000, show_figure=True) -> None:
+def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2, y_max=1.2, width=5000, height=5000, show_figure=True, local_size=1) -> None:
     """
     Computes the Mandelbrot set using OpenCL.
 
@@ -35,7 +40,7 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
     >>> context = pyopencl.Context([device])
     >>> queue = pyopencl.CommandQueue(context, device)
     >>> x_min, x_max, y_min, y_max, width, height = -2.3, 0.8, -1.2, 1.2, 5000, 5000
-    >>> mandelbrot_opencl(device, context, queue, x_min, x_max, y_min, y_max, width, height, show_figure=False)
+    >>> mandelbrot_opencl(device, context, queue, x_min, x_max, y_min, y_max, width, height, show_figure=False, local_size=1)
     array([[1., 1., 1., ..., 2., 2., 2.],
            [1., 1., 1., ..., 2., 2., 2.],
            [1., 1., 1., ..., 2., 2., 2.],
@@ -61,7 +66,7 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
         __private float imaginary = 0;
         __private float real_pow_2, imaginary_pow_2;
                 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1000; i++)
         {
             real_pow_2 = real * real;
             imaginary_pow_2 = imaginary * imaginary;
@@ -82,12 +87,14 @@ def mandelbrot_opencl(device, context, queue, x_min=-2.3, x_max=0.8, y_min=-1.2,
     q_opencl = pyopencl.Buffer(context, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=complete_space)
     output_opencl = pyopencl.Buffer(context, mf.WRITE_ONLY, output.nbytes)
 
-    program.mandelbrot(queue, output.shape, None, q_opencl, output_opencl)
+    program.mandelbrot(queue, output.shape, [local_size], q_opencl, output_opencl)
     pyopencl.enqueue_copy(queue, output, output_opencl).wait()
 
     divergence_time = output.reshape((height, width))
     time_compute = computation_time(start_time, time.time())
-    # print(f"Computation time: {time_compute} seconds")
+
+    compute_local_sizes[-1].append(local_size)
+    compute_local_computations[-1].append(time_compute)
 
     if show_figure:
         plt.imshow(divergence_time, cmap='magma')
@@ -110,31 +117,32 @@ def computation_time(start_time, end_time):
     return round(end_time - start_time, 3)
 
 
-def create_opencl_context(platform_name: str = "Intel"):
+def create_opencl_context(platform):
     """
     Create OpenCL context, queue, device and platform
 
     Parameters
-    :param platform_name: Name of the platform to use
-    :return: cpu_context, cpu_queue, cpu_device, cpu_name: Output from the CPU/GPU
+    :param platform: Name of the platform to use
+    :return: context, queue, device, name: Output from the CPU/GPU
 
     Usage examples:
-    >>> cpu_context, cpu_queue, cpu_device, cpu_name = create_opencl_context()
-    >>> assert isinstance(cpu_context, pyopencl.Context)
-    >>> assert isinstance(cpu_queue, pyopencl.CommandQueue)
-    >>> assert isinstance(cpu_device, pyopencl.Device)
-    >>> assert isinstance(cpu_name, str)
-    >>> assert cpu_name.lower() in [platform.name.lower() for platform in pyopencl.get_platforms()]
+    >>> import pyopencl
+    >>> platform = pyopencl.get_platforms()[0]
+    >>> context, queue, device, name = create_opencl_context(platform)
+    >>> isinstance(context, pyopencl.Context)
+    True
+    >>> isinstance(queue, pyopencl.CommandQueue)
+    True
+    >>> isinstance(device, pyopencl.Device)
+    True
+    >>> isinstance(name, str)
+    True
     """
 
-    for i in pyopencl.get_platforms():
-        if platform_name in i.name:
-            cpu_platform = i
-            cpu_device = cpu_platform.get_devices()[0]
-            cpu_context = pyopencl.Context(devices=[cpu_device])
-            cpu_queue = pyopencl.CommandQueue(cpu_context)
-            cpu_name = i.name
-            return cpu_context, cpu_queue, cpu_device, cpu_name
+    device = platform.get_devices()[0]
+    context = pyopencl.Context(devices=[device])
+    queue = pyopencl.CommandQueue(context)
+    return context, queue, device, platform.name
 
 
 def main(show_fig=False):
@@ -143,25 +151,41 @@ def main(show_fig=False):
 
     :param show_fig: Show the figure or not when finishing the computations
     """
+    global compute_local_sizes, compute_local_computations
+    compute_local_sizes = []
+    compute_local_computations = []
+    platform_name = []
 
-    sizes_to_compute = [500, 1000, 2000, 5000, 10000]
+    global_sizes = [500, 1000, 2000, 5000, 10000]
+    local_sizes = [2, 4, 8, 16, 32, 64, 128, 256]
 
-    cpu_context, cpu_queue, cpu_device, cpu_name = create_opencl_context(platform_name="Intel")
-    gpu_context, gpu_queue, gpu_device, gpu_name = create_opencl_context(platform_name="NVIDIA")
+    for i in pyopencl.get_platforms():
+        context, queue, device, name = create_opencl_context(i)
+        print("Platform:", name)
 
-    if cpu_context:
-        print("CPU:", cpu_name)
-        for size in sizes_to_compute:
-            mandelbrot_opencl(device=cpu_device, context=cpu_context, queue=cpu_queue, width=size, height=size, show_figure=False)
-    else:
-        print("No CPU found")
-    if gpu_context:
-        print("GPU:", gpu_name)
-        for size in sizes_to_compute:
-            mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=size, height=size, show_figure=False)
-        mandelbrot_opencl(device=gpu_device, context=gpu_context, queue=gpu_queue, width=10000, height=10000, show_figure=show_fig)
-    else:
-        print("No GPU found")
+        platform_name.append(name)
+        compute_local_sizes.append([])
+        compute_local_computations.append([])
+        for size in local_sizes:
+            print("Local size:", size)
+            try:
+                mandelbrot_opencl(device=device, context=context, queue=queue, width=10000, height=10000, local_size=size, show_figure=False)
+            except:
+                print("Error in local size:", size)
+                break
+
+    for i in range(len(platform_name)):
+        plt.plot(max(compute_local_sizes), compute_local_computations[i], label=platform_name[i])
+
+    plt.xlabel("Local Size")
+    plt.ylabel("Computation Time (s)")
+    plt.title("Computation Time vs Local Size")
+    plt.legend()
+    plt.show()
+
+    if show_fig:
+        context, queue, device, name = create_opencl_context(pyopencl.get_platforms()[0])
+        mandelbrot_opencl(device=device, context=context, queue=queue, width=10000, height=10000, local_size=1, show_figure=True)
 
 
 if __name__ == '__main__':
