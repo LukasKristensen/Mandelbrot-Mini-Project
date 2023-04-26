@@ -6,6 +6,7 @@ import multiprocessing
 import mandelbrot_datatypes
 import mandelbrot_dask
 import mandelbrot_opencl
+import pyopencl
 
 
 def mini_project_part_1():
@@ -49,7 +50,8 @@ def performance_compare(size):
     mandelbrot_dask.dask_local_distribution(show_figure=False, pRE=size, pIM=size, chunk_size=2000)
 
     print("\nOpenCL approach:")
-    mandelbrot_opencl.main(show_figure=False, size=size)
+    context, queue, device, name = mandelbrot_opencl.create_opencl_context(pyopencl.get_platforms()[0])
+    mandelbrot_opencl.mandelbrot_opencl(device=device, context=context, queue=queue, width=size, height=size, local_size=25, show_figure=False)
 
 
 if __name__ == '__main__':
