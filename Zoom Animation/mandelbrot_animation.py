@@ -31,7 +31,7 @@ def compute_set(x_0, y_0, x_1, y_1):
     return reshaped_solution
 
 
-if __name__ == '__main__':
+def main():
     output_video_destination = f'mandelbrot_animation_{str(datetime.datetime.now()).replace(":", "-").replace(".", "")}.avi'
     print(f'Video save destination: {os.getcwd()}/{output_video_destination}')
     start_render_time = time.time()
@@ -72,3 +72,6 @@ if __name__ == '__main__':
 
     print("Video saved to:", os.getcwd() + "/" + output_video_destination)
     print("Complete! Total render time:", time.time() - start_render_time)
+
+if __name__ == "__main__":
+    main()

@@ -7,6 +7,7 @@ import mandelbrot_datatypes
 import mandelbrot_dask
 import mandelbrot_opencl
 import pyopencl
+import mandelbrot_navigator
 
 
 def mini_project_part_1():
@@ -54,6 +55,23 @@ def performance_compare(size):
     mandelbrot_opencl.mandelbrot_opencl(device=device, context=context, queue=queue, width=size, height=size, local_size=25, show_figure=False)
 
 
+def mandelbrot_explore():
+    mandelbrot_navigator.main()
+
+
 if __name__ == '__main__':
-    performance_compare(size=10000)
+    # performance_compare(size=10000)
+    print(f'\n {"#"*15} Mandelbrot Set {"#"*15}')
+    print(f'1) Performance Comparison')
+    print(f'2) Mandelbrot Navigation Tool')
+
+    choice = input("Enter your choice: ")
+    if choice == '1':
+        plot_size = input("\nEnter the size of the plot (e.g. 1000): ")
+        performance_compare(size=int(plot_size))
+    elif choice == '2':
+        mandelbrot_explore()
+    else:
+        print("Invalid choice!")
+
 

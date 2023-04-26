@@ -8,7 +8,7 @@
 import pyopencl
 import time
 import cv2 as cv
-from mandelbrot_approaches import mandelbrot_opencl
+import mandelbrot_opencl
 
 
 xmin, xmax, ymin, ymax = -2.3, 0.8, -1.2, 1.2
@@ -63,6 +63,10 @@ def main():
     :return:
     """
     global xmin, xmax, ymin, ymax
+    global context, queue, device, name
+
+    context, queue, device, name = mandelbrot_opencl.create_opencl_context(pyopencl.get_platforms()[0])
+
     draw_window()
 
     while True:
@@ -102,5 +106,4 @@ def main():
 
 
 if __name__ == '__main__':
-    context, queue, device, name = mandelbrot_opencl.create_opencl_context(pyopencl.get_platforms()[0])
     main()
