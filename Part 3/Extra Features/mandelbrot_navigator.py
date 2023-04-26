@@ -20,7 +20,7 @@ xmin, xmax, ymin, ymax = -2.3, 0.8, -1.2, 1.2
 
 def draw_window():
     start_time = time.time()
-    mandelbrot_figure = mandelbrot_opencl.mandelbrot_opencl(device=device, context=context, queue=queue, width=1000, height=1000, local_size=1, show_figure=False, x_min=xmin, x_max=xmax, y_min=ymin, y_max=ymax)
+    mandelbrot_figure = mandelbrot_opencl.mandelbrot_opencl(device=device, context=context, queue=queue, width=1000, height=1000, local_size=64, show_figure=False, x_min=xmin, x_max=xmax, y_min=ymin, y_max=ymax)
     # Add opencv text
     font = cv.FONT_HERSHEY_SIMPLEX
 
