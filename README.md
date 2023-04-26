@@ -1,8 +1,13 @@
 # Mandelbrot-Mini-Project
 Implementation of the Mandelbrot set for the Numerical Scientific Computing Course (Computer Engineering 8th semester, AAU)
 
-- To compare the performance between the algorithms run the [``main.py``](main.py) file.
-- To generate a plot showing the mandelbrot set configure one of the parameters to ``show_figure=True`` in [``main.py``](main.py).
+## Features
+- Compare the different algorithm approaches: [``main.py``](main.py)
+- Mandelbrot Interactive Navigator [``mandelbrot_navigator.py``](mandelbrot_navigator.py)
+- Mandelbrot Zoom Animation [``Zoom Animation/mandelbrot_animation.py``](<Zoom Animation/mandelbrot_animation.py>)
+  - Video: https://www.youtube.com/watch?v=L2zKIrriDfI
+- Mandelbrot Iteration Animation [``Iterations Animation/mandelbrot_iteration_animation.py``](<Iterations Animation/mandelbrot_iteration_animation.py>)
+  - Video: https://www.youtube.com/watch?v=8BjqgaIuses
 
 </br>
 
@@ -33,6 +38,14 @@ Generated sequence of zoom into fractal [``mandelbrot_animation.py``](<Zoom Anim
 Generated sequence of zoom into fractal [``mandelbrot_iteration_animation.py``](<Iterations Animation/mandelbrot_iteration_animation.py>)
 
 [Demo of animating iterations](https://www.youtube.com/watch?v=8BjqgaIuses)
+
+</br>
+
+## Interactive Navigator
+
+Navigation through the Mandelbrot Set by using keyboard controls [``mandelbrot_navigator.py``](mandelbrot_navigator.py)
+
+![img](<interactive_screenshot.png>)
 
 </br>
 
