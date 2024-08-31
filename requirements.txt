@@ -2,5 +2,5 @@ dask==2022.2.1
 matplotlib==3.5.3
 numba==0.56.3
 numpy==1.22.3
-opencv_python==4.5.3.56
+opencv_python==4.8.1.78
 pyopencl==2022.3.1
